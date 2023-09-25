@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 
-tag_pattern = re.compile(r"# tag::(.+?)\n(.+?)\n# end::\1", re.DOTALL)
+tag_pattern = re.compile(r"#\s*tag::(.+?)\n(.+?)\n#\s*end::\1", re.DOTALL)
 
 tag_index = {}
 for filename in Path().rglob("*.py"):

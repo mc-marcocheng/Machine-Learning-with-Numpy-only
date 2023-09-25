@@ -41,5 +41,22 @@ ${{ beale_function_gradient_descent }}
 ```
 $[[ +gradient_descent.snippets.gradient_descent_beale ]]
 
+Note: Beale's function is a gradient descent testing function, meaning that it is not easy for gradient descent algorithms. The learning rate $\alpha$ and iterations need to be tuned manually.
+
 Its gradient descent path:
 ![](../assets/beale_function_gradient_descent_path.png)
+
+## Momentum
+In momentum-based gradient descent, we will consider the previous updates in derivatives.
+
+Let $v_{t-1}$ be the last update vector. The current update vector will be:
+$$v_t=\gamma v_{t-1}+\alpha\nabla f(x)$$
+
+The update vector is used to update the current `x`:
+$$x=x-v_t$$
+
+$v_t$ is called the **momentum**.
+
+```python
+code
+```

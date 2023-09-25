@@ -19,6 +19,8 @@ def gradient_descent(df, x, alpha=0.01, iterations=100, epsilon=1e-8):
         x = x - alpha * df(x)
         history.append(x)
     return history
+
+
 ```
 
 For example, we want to find the local minimum of $f(x)=x^3-3x^2-9x+2$. Its derivative is $f^\prime(x)=3x^2-6x-9$.
@@ -47,6 +49,8 @@ $$f(x,y)=(1.5-x+xy)^2+(2.25-x+xy^2)^2+(2.625-x+xy^3)^2$$
 
 ![](../assets/beale_function.png)
 
+Its derivatives:
+
 $$\frac{\partial f(x,y)}{\partial x}=2(1.5-x+xy)(y-1)+2(2.25-x+xy^2)(y^2-1)+2(2.625-x+xy^3)(y^3-1)$$
 
 $$\frac{\partial f(x,y)}{\partial y}=2(1.5-x+xy)x+2(2.25-x+xy^2)(2yx)+2(2.625-x+xy^3)(3y^2x)$$
@@ -70,5 +74,22 @@ Minimum point located at (x, y)=(2.996394053883693, 0.4990985442431246)
 </details>
 
 
+Note: Beale's function is a gradient descent testing function, meaning that it is not easy for gradient descent algorithms. The learning rate $\alpha$ and iterations need to be tuned manually.
+
 Its gradient descent path:
 ![](../assets/beale_function_gradient_descent_path.png)
+
+## Momentum
+In momentum-based gradient descent, we will consider the previous updates in derivatives.
+
+Let $v_{t-1}$ be the last update vector. The current update vector will be:
+$$v_t=\gamma v_{t-1}+\alpha\nabla f(x)$$
+
+The update vector is used to update the current `x`:
+$$x=x-v_t$$
+
+$v_t$ is called the **momentum**.
+
+```python
+code
+```

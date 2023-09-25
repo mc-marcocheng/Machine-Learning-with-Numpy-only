@@ -16,3 +16,10 @@ repos:
         exclude: migrations/
         args:
           - --line-length=100
+  - repo: local
+    hooks:
+      - id: build-from-templates
+        name: build-from-templates
+        entry: python build.py
+        language: system
+        pass_filenames: false

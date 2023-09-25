@@ -37,7 +37,10 @@ for filename in Path().rglob("*.template.*"):
                 template = template.replace(pattern, "")
             else:
                 output = subprocess.check_output(["python", "-m", py_file], shell=True)
-                output = output.decode("utf-8").replace("\r\n", "\n").rstrip()
+                output = (
+                    output.decode("utf-8").replace("\r\n", "\n").rstrip().rstrip("\n")
+                )
+                print(output.encode())
                 template = template.replace(
                     pattern, detail.format(" open" if collapse == "+" else "", output)
                 )

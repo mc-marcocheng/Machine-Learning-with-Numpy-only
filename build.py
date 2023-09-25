@@ -2,7 +2,6 @@ import re
 import subprocess
 from pathlib import Path
 
-
 tag_pattern = re.compile(r"#\s*tag::(.+?)\n(.+?)\n#\s*end::\1", re.DOTALL)
 
 tag_index = {}
@@ -39,6 +38,12 @@ for filename in Path().rglob("*.template.*"):
             else:
                 output = subprocess.check_output(["python", "-m", py_file], shell=True)
                 output = output.decode("utf-8").replace("\r\n", "\n").rstrip()
-                template = template.replace(pattern, detail.format(" open" if collapse == "+" else "", output))
-    with open(filename.parent / filename.name.replace(".template", "", 1), "w", encoding="utf-8") as f:
+                template = template.replace(
+                    pattern, detail.format(" open" if collapse == "+" else "", output)
+                )
+    with open(
+        filename.parent / filename.name.replace(".template", "", 1),
+        "w",
+        encoding="utf-8",
+    ) as f:
         f.write(template)

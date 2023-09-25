@@ -106,7 +106,6 @@ print(f"Minimum point located at (x, y)={tuple(path[-1])}")
 <summary>Output</summary>
 
 ```
-Minimum point located at (x, y)=(2.707358277261343, 0.4168917147021121)
 Minimum point located at (x, y)=(2.9632463255505734, 0.49067782206377325)
 ```
 

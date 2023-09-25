@@ -39,7 +39,7 @@ $$\frac{\partial f(x,y)}{\partial y}=2(1.5-x+xy)x+2(2.25-x+xy^2)(2yx)+2(2.625-x+
 ```python
 ${{ beale_function_gradient_descent }}
 ```
-$[[ +gradient_descent.snippets.gradient_descent_beale ]]
+$[[ +gradient_descent.snippets.gradient_descent_beale_1 ]]
 
 Note: Beale's function is a gradient descent testing function, meaning that it is not easy for gradient descent algorithms. The learning rate $\alpha$ and iterations need to be tuned manually.
 
@@ -58,5 +58,12 @@ $$x=x-v_t$$
 $v_t$ is called the **momentum**.
 
 ```python
-code
+${{ gradient_descent_momentum }}
 ```
+
+```python
+${{ beale_function_gradient_descent }}
+```
+$[[ +gradient_descent.snippets.gradient_descent_beale_2 ]]
+
+![](../assets/beale_function_gradient_descent_momentum_path.png)

@@ -54,25 +54,14 @@ $$\frac{\partial f(x,y)}{\partial x}=2(1.5-x+xy)(y-1)+2(2.25-x+xy^2)(y^2-1)+2(2.
 $$\frac{\partial f(x,y)}{\partial y}=2(1.5-x+xy)x+2(2.25-x+xy^2)(2yx)+2(2.625-x+xy^3)(3y^2x)$$
 
 ```python
-df = lambda x: np.array(
-    [
-        2 * (1.5 - x[0] + x[0] * x[1]) * (x[1] - 1)
-        + 2 * (2.25 - x[0] + x[0] * x[1] ** 2) * (x[1] ** 2 - 1)
-        + 2 * (2.625 - x[0] + x[0] * x[1] ** 3) * (x[1] ** 3 - 1),
-        2 * (1.5 - x[0] + x[0] * x[1]) * x[0]
-        + 2 * (2.25 - x[0] + x[0] * x[1] ** 2) * (2 * x[0] * x[1])
-        + 2 * (2.625 - x[0] + x[0] * x[1] ** 3) * (3 * x[0] * x[1] ** 2),
-    ]
-)
-x0 = np.array([3, 4])  # Starting from point (3, 4)
-path = gradient_descent(df, x0, 0.00005, 300000)
+path = gradient_descent_momentum(df, x0, alpha=0.000005, iterations=300000)
 print(f"Minimum point located at (x, y)={tuple(path[-1])}")
 ```
 <details open>
 <summary>Output</summary>
 
 ```
-Minimum point located at (x, y)=(2.996394053883693, 0.4990985442431246)
+Minimum point located at (x, y)=(2.707358277261343, 0.4168917147021121)
 ```
 
 </details>
@@ -95,5 +84,33 @@ $$x=x-v_t$$
 $v_t$ is called the **momentum**.
 
 ```python
-code
+def gradient_descent_momentum(
+    df, x, alpha=0.01, gamma=0.8, iterations=100, epsilon=1e-6
+):
+    history = [x]
+    v = np.zeros_like(x)
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        v = gamma * v + alpha * df(x)
+        x = x - v
+        history.append(x)
+    return history
 ```
+
+```python
+path = gradient_descent_momentum(df, x0, alpha=0.000005, iterations=300000)
+print(f"Minimum point located at (x, y)={tuple(path[-1])}")
+```
+<details open>
+<summary>Output</summary>
+
+```
+Minimum point located at (x, y)=(2.707358277261343, 0.4168917147021121)
+Minimum point located at (x, y)=(2.9632463255505734, 0.49067782206377325)
+```
+
+</details>
+
+
+![](../assets/beale_function_gradient_descent_momentum_path.png)

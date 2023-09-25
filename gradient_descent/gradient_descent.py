@@ -36,3 +36,19 @@ def gradient_descent(df, x, alpha=0.01, iterations=100, epsilon=1e-8):
         history.append(x)
     return history
 # end::gradient_descent
+
+
+# tag::gradient_descent_momentum
+def gradient_descent_momentum(
+    df, x, alpha=0.01, gamma=0.8, iterations=100, epsilon=1e-6
+):
+    history = [x]
+    v = np.zeros_like(x)
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        v = gamma * v + alpha * df(x)
+        x = x - v
+        history.append(x)
+    return history
+# end::gradient_descent_momentum

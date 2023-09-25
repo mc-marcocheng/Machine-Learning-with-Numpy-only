@@ -51,10 +51,10 @@ df = lambda x: np.array(
     ]
 )
 x0 = np.array([3, 4])  # Starting from point (3, 4)
-path = gradient_descent(df, x0, 0.00005, 300000)
+path = gradient_descent(df, x0, alpha=0.000005, iterations=300000)
 print(f"Minimum point located at (x, y)={tuple(path[-1])}")
 # end::beale_function_gradient_descent
 
-path = np.array(path)
+path = np.asarray(path)
 fig = plot_graph(path, x, y, z, minima_, xmin, xmax, ymin, ymax)
 fig.savefig("assets/beale_function_gradient_descent_path.png")

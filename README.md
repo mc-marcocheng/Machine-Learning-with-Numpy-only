@@ -2,7 +2,7 @@
 I will try to implement machine learning basic algorithms and architectures using only Numpy. Some explanations are included. I will not use any deep learning libraries like Keras, TensorFlow nor PyTorch.
 
 ## Content
-- Gradient Descent (In progress)
+- [Gradient Descent](gradient_descent/README.md) (In progress)
     - Momentum
     - AdaGrad
     - AdaDelta

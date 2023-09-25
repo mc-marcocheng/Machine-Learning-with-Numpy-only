@@ -44,10 +44,13 @@ $$f(x+\Delta x)-f(x)\approx\nabla f(x)\Delta x$$
 
 Example: [Beale's function](https://www.sfu.ca/~ssurjano/beale.html)
 $$f(x,y)=(1.5-x+xy)^2+(2.25-x+xy^2)^2+(2.625-x+xy^3)^2$$
+
 ![](../assets/beale_function.png)
 
 $$\frac{\partial f(x,y)}{\partial x}=2(1.5-x+xy)(y-1)+2(2.25-x+xy^2)(y^2-1)+2(2.625-x+xy^3)(y^3-1)$$
+
 $$\frac{\partial f(x,y)}{\partial y}=2(1.5-x+xy)x+2(2.25-x+xy^2)(2yx)+2(2.625-x+xy^3)(3y^2x)$$
+
 ```python
 df = lambda x: np.array([
     2*(1.5-x[0]+x[0]*x[1])*(x[1]-1) + 2*(2.25-x[0]+x[0]*x[1]**2)*(x[1]**2-1) + 2*(2.625-x[0]+x[0]*x[1]**3)*(x[1]**3-1),

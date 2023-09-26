@@ -52,3 +52,18 @@ def gradient_descent_momentum(
         history.append(x)
     return history
 # end::gradient_descent_momentum
+
+
+# tag::gradient_descent_adagrad
+def gradient_descent_Adagrad(df, x, alpha=0.01, iterations=100, epsilon=1e-8):
+    history = [x]
+    gl = np.zeros_like(x)
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        gl += grad**2
+        x = x - alpha * grad / (np.sqrt(gl) + epsilon)
+        history.append(x)
+    return history
+# end::gradient_descent_adagrad

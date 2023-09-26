@@ -41,7 +41,7 @@ ${{ beale_function_gradient_descent }}
 ```
 $[[ +gradient_descent.snippets.gradient_descent_beale_1 ]]
 
-Note: Beale's function is a gradient descent testing function, meaning that it is not easy for gradient descent algorithms. The learning rate $\alpha$ and iterations need to be tuned manually.
+Note: Beale's function is a gradient descent testing function, meaning that it is not easy for gradient descent algorithms. The learning rate $\alpha$ and iterations need to be tuned manually. The true minimum for the function is at $(x,y)=(3,0.5)$.
 
 Its gradient descent path:
 ![](../assets/beale_function_gradient_descent_path.png)

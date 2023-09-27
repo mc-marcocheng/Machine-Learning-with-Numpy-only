@@ -1,6 +1,6 @@
 import numpy as np
 
-from gradient_descent.gradient_descent import gradient_descent_Adagrad, plot_graph
+from gradient_descent.gradient_descent import gradient_descent_Adadelta, plot_graph
 
 # Beale's function
 f = (
@@ -28,11 +28,11 @@ df = lambda x: np.array(
 )
 x0 = np.array([3.0, 3.0])  # Starting from point (3, 3)
 
-# tag::beale_function_gradient_descent_adagrad
-path = gradient_descent_Adagrad(df, x0, alpha=0.1, iterations=300000)
+# tag::beale_function_gradient_descent_adadelta
+path = gradient_descent_Adadelta(df, x0, alpha=1, rho=0.9, iterations=300000)
 print(f"Minimum point located at (x, y)={tuple(path[-1])}")
-# end::beale_function_gradient_descent_adagrad
+# end::beale_function_gradient_descent_adadelta
 
 path = np.asarray(path)
 fig = plot_graph(path, x, y, z, minima_, xmin, xmax, ymin, ymax)
-fig.savefig("assets/beale_function_gradient_descent_adagrad_path.png")
+fig.savefig("assets/beale_function_gradient_descent_adadelta_path.png")

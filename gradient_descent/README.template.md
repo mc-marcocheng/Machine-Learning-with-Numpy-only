@@ -62,7 +62,7 @@ ${{ gradient_descent_momentum }}
 ```
 
 ```python
-${{ beale_function_gradient_descent }}
+${{ beale_function_gradient_descent_momentum }}
 ```
 $[[ +gradient_descent.snippets.gradient_descent_beale_2 ]]
 
@@ -98,6 +98,10 @@ $$x_{t+1}=x_t-\alpha\frac{1}{\sqrt{\sum_{t^\prime=1}^tg_{t^\prime}^2}+\epsilon}\
 ```python
 ${{ gradient_descent_adagrad }}
 ```
+
+```python
+${{ beale_function_gradient_descent_adagrad }}
+```
 $[[ +gradient_descent.snippets.gradient_descent_adagrad ]]
 
 ![](../assets/beale_function_gradient_descent_adagrad_path.png)
@@ -127,5 +131,12 @@ The final AdaDelta formula is:
 $$x_{t+1}=x_t-\frac{RMS[\Delta x]_{t-1}}{RMS[g]_t}g_t$$
 
 ```python
-
+${{ gradient_descent_adadelta }}
 ```
+
+```python
+${{ beale_function_gradient_descent_adadelta }}
+```
+$[[ +gradient_descent.snippets.gradient_descent_adadelta ]]
+
+![](../assets/beale_function_gradient_descent_adadelta_path.png)

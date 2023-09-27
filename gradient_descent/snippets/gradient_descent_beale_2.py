@@ -26,12 +26,12 @@ df = lambda x: np.array(
         + 2 * (2.625 - x[0] + x[0] * x[1] ** 3) * (3 * x[0] * x[1] ** 2),
     ]
 )
-x0 = np.array([3, 4])  # Starting from point (3, 4)
+x0 = np.array([3, 3])  # Starting from point (3, 3)
 
-# tag::beale_function_gradient_descent
+# tag::beale_function_gradient_descent_momentum
 path = gradient_descent_momentum(df, x0, alpha=0.000005, iterations=300000)
 print(f"Minimum point located at (x, y)={tuple(path[-1])}")
-# end::beale_function_gradient_descent
+# end::beale_function_gradient_descent_momentum
 
 path = np.asarray(path)
 fig = plot_graph(path, x, y, z, minima_, xmin, xmax, ymin, ymax)

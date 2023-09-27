@@ -54,14 +54,25 @@ $$\frac{\partial f(x,y)}{\partial x}=2(1.5-x+xy)(y-1)+2(2.25-x+xy^2)(y^2-1)+2(2.
 $$\frac{\partial f(x,y)}{\partial y}=2(1.5-x+xy)x+2(2.25-x+xy^2)(2yx)+2(2.625-x+xy^3)(3y^2x)$$
 
 ```python
-path = gradient_descent_momentum(df, x0, alpha=0.000005, iterations=300000)
+df = lambda x: np.array(
+    [
+        2 * (1.5 - x[0] + x[0] * x[1]) * (x[1] - 1)
+        + 2 * (2.25 - x[0] + x[0] * x[1] ** 2) * (x[1] ** 2 - 1)
+        + 2 * (2.625 - x[0] + x[0] * x[1] ** 3) * (x[1] ** 3 - 1),
+        2 * (1.5 - x[0] + x[0] * x[1]) * x[0]
+        + 2 * (2.25 - x[0] + x[0] * x[1] ** 2) * (2 * x[0] * x[1])
+        + 2 * (2.625 - x[0] + x[0] * x[1] ** 3) * (3 * x[0] * x[1] ** 2),
+    ]
+)
+x0 = np.array([3, 3])  # Starting from point (3, 3)
+path = gradient_descent(df, x0, alpha=0.000005, iterations=300000)
 print(f"Minimum point located at (x, y)={tuple(path[-1])}")
 ```
 <details open>
 <summary>Output</summary>
 
 ```
-Minimum point located at (x, y)=(2.707358277261343, 0.4168917147021121)
+Minimum point located at (x, y)=(2.829724525295281, 0.4541932374086433)
 ```
 
 </details>
@@ -106,7 +117,7 @@ print(f"Minimum point located at (x, y)={tuple(path[-1])}")
 <summary>Output</summary>
 
 ```
-Minimum point located at (x, y)=(2.9632463255505734, 0.49067782206377325)
+Minimum point located at (x, y)=(2.974506759730263, 0.4935656997437751)
 ```
 
 </details>
@@ -154,11 +165,16 @@ def gradient_descent_Adagrad(df, x, alpha=0.01, iterations=100, epsilon=1e-8):
         history.append(x)
     return history
 ```
+
+```python
+path = gradient_descent_Adagrad(df, x0, alpha=0.1, iterations=300000)
+print(f"Minimum point located at (x, y)={tuple(path[-1])}")
+```
 <details open>
 <summary>Output</summary>
 
 ```
-Minimum point located at (x, y)=(-0.6924071729137973, 1.7623376605421204)
+Minimum point located at (x, y)=(2.750702308100331, 0.42869147033774946)
 ```
 
 </details>
@@ -191,5 +207,34 @@ The final AdaDelta formula is:
 $$x_{t+1}=x_t-\frac{RMS[\Delta x]_{t-1}}{RMS[g]_t}g_t$$
 
 ```python
+def gradient_descent_Adadelta(df, x, alpha=0.1, rho=0.9, iterations=100, epsilon=1e-8):
+    history = [x]
+    Eg = np.zeros_like(x)
+    Edelta = np.zeros_like(x)
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        Eg = rho * Eg + (1 - rho) * (grad**2)
+        delta = np.sqrt((Edelta + epsilon) / (Eg + epsilon)) * grad
+        x = x - alpha * delta
+        Edelta = rho * Edelta + (1 - rho) * (delta**2)
+        history.append(x)
+    return history
+```
+
+```python
+path = gradient_descent_Adadelta(df, x0, alpha=1, rho=0.9, iterations=300000)
+print(f"Minimum point located at (x, y)={tuple(path[-1])}")
+```
+<details open>
+<summary>Output</summary>
 
 ```
+Minimum point located at (x, y)=(2.962041292697473, 0.4611065715690389)
+```
+
+</details>
+
+
+![](../assets/beale_function_gradient_descent_adadelta_path.png)

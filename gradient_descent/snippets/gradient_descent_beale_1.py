@@ -50,7 +50,7 @@ df = lambda x: np.array(
         + 2 * (2.625 - x[0] + x[0] * x[1] ** 3) * (3 * x[0] * x[1] ** 2),
     ]
 )
-x0 = np.array([3, 4])  # Starting from point (3, 4)
+x0 = np.array([3, 3])  # Starting from point (3, 3)
 path = gradient_descent(df, x0, alpha=0.000005, iterations=300000)
 print(f"Minimum point located at (x, y)={tuple(path[-1])}")
 # end::beale_function_gradient_descent

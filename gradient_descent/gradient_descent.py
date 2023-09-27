@@ -67,3 +67,21 @@ def gradient_descent_Adagrad(df, x, alpha=0.01, iterations=100, epsilon=1e-8):
         history.append(x)
     return history
 # end::gradient_descent_adagrad
+
+
+# tag::gradient_descent_adadelta
+def gradient_descent_Adadelta(df, x, alpha=0.1, rho=0.9, iterations=100, epsilon=1e-8):
+    history = [x]
+    Eg = np.zeros_like(x)
+    Edelta = np.zeros_like(x)
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        Eg = rho * Eg + (1 - rho) * (grad**2)
+        delta = np.sqrt((Edelta + epsilon) / (Eg + epsilon)) * grad
+        x = x - alpha * delta
+        Edelta = rho * Edelta + (1 - rho) * (delta**2)
+        history.append(x)
+    return history
+# end::gradient_descent_adadelta

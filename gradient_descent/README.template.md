@@ -140,3 +140,51 @@ ${{ beale_function_gradient_descent_adadelta }}
 $[[ +gradient_descent.snippets.gradient_descent_adadelta ]]
 
 ![](../assets/beale_function_gradient_descent_adadelta_path.png)
+
+## RMSprop
+
+RMSprop is similar to Momentum:
+
+$$v_t=\beta v_{t-1}+(1-\beta)\nabla f(x)^2$$
+
+$$x=x-\alpha\frac{1}{\sqrt{v_t}+\epsilon}\nabla f(x)$$
+
+```python
+${{ gradient_descent_rmsprop }}
+```
+
+```python
+${{ beale_function_gradient_descent_rmsprop }}
+```
+$[[ +gradient_descent.snippets.gradient_descent_rmsprop ]]
+
+![](../assets/beale_function_gradient_descent_rmsprop_path.png)
+
+## Adam
+
+Adam is similar to RMSprop: it has a decaying moving average of square root of past gradients ($v_t$). It is also similar to Momentum: it has a decaying moving average of past gradients ($m_t$). We can view Momentum's behavior as a ball moving along the gradient, and view Adam's behavior as a ball with higher friction moving along the gradient.
+
+Denote $m_t$ as the moving average of gradient, and $v_t$ as the moving average of the square of the gradient.
+$$m_t=\beta_1 m_{t-1}+(1-\beta_1)g_t$$
+
+$$v_t=\beta_2 v_{t-1}+(1-\beta_2)g_t^2$$
+
+The authors observe that when the decay is small (i.e. $\beta_1$ and $\beta_2$ are close to 1), $m_t$ and $v_t$ will tend to 0 initially. They introduce the correction formula:
+$$\hat{m_t}=\frac{m_t}{1-\beta_1^t}$$
+
+$$\hat{v_t}=\frac{v_t}{1-\beta_2^t}$$
+
+The final update formula is:
+
+$$\theta_{t+1}=\theta_t-\frac{\eta}{\sqrt{\hat{v_t}+\epsilon}}\hat{m_t}$$
+
+```python
+${{ gradient_descent_adam }}
+```
+
+```python
+${{ beale_function_gradient_descent_adam }}
+```
+$[[ +gradient_descent.snippets.gradient_descent_adam ]]
+
+![](../assets/beale_function_gradient_descent_adam_path.png)

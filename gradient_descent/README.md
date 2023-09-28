@@ -215,10 +215,10 @@ def gradient_descent_Adadelta(df, x, alpha=0.1, rho=0.9, iterations=100, epsilon
         if np.max(np.abs(df(x))) < epsilon:
             break
         grad = df(x)
-        Eg = rho * Eg + (1 - rho) * (grad**2)
+        Eg = rho * Eg + (1 - rho) * grad**2
         delta = np.sqrt((Edelta + epsilon) / (Eg + epsilon)) * grad
         x = x - alpha * delta
-        Edelta = rho * Edelta + (1 - rho) * (delta**2)
+        Edelta = rho * Edelta + (1 - rho) * delta**2
         history.append(x)
     return history
 ```
@@ -238,3 +238,99 @@ Minimum point located at (x, y)=(2.962041292697473, 0.4611065715690389)
 
 
 ![](../assets/beale_function_gradient_descent_adadelta_path.png)
+
+## RMSprop
+
+RMSprop is similar to Momentum:
+
+$$v_t=\beta v_{t-1}+(1-\beta)\nabla f(x)^2$$
+
+$$x=x-\alpha\frac{1}{\sqrt{v_t}+\epsilon}\nabla f(x)$$
+
+```python
+def gradient_descent_RMSprop(df, x, alpha=0.01, beta=0.9, iterations=100, epsilon=1e-8):
+    history = [x]
+    v = np.zeros_like(x)
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        v = beta * v + (1 - beta) * grad**2
+        x = x - alpha * grad / (np.sqrt(v) + epsilon)
+        history.append(x)
+    return history
+```
+
+```python
+path = gradient_descent_RMSprop(
+    df, x0, alpha=0.000005, beta=0.99999999999, iterations=300000
+)
+print(f"Minimum point located at (x, y)={tuple(path[-1])}")
+```
+<details open>
+<summary>Output</summary>
+
+```
+Minimum point located at (x, y)=(2.99999996284316, 0.49999999062060047)
+```
+
+</details>
+
+
+![](../assets/beale_function_gradient_descent_rmsprop_path.png)
+
+## Adam
+
+Adam is similar to RMSprop: it has a decaying moving average of square root of past gradients ($v_t$). It is also similar to Momentum: it has a decaying moving average of past gradients ($m_t$). We can view Momentum's behavior as a ball moving along the gradient, and view Adam's behavior as a ball with higher friction moving along the gradient.
+
+Denote $m_t$ as the moving average of gradient, and $v_t$ as the moving average of the square of the gradient.
+$$m_t=\beta_1 m_{t-1}+(1-\beta_1)g_t$$
+
+$$v_t=\beta_2 v_{t-1}+(1-\beta_2)g_t^2$$
+
+The authors observe that when the decay is small (i.e. $\beta_1$ and $\beta_2$ are close to 1), $m_t$ and $v_t$ will tend to 0 initially. They introduce the correction formula:
+$$\hat{m_t}=\frac{m_t}{1-\beta_1^t}$$
+
+$$\hat{v_t}=\frac{v_t}{1-\beta_2^t}$$
+
+The final update formula is:
+
+$$\theta_{t+1}=\theta_t-\frac{\eta}{\sqrt{\hat{v_t}+\epsilon}}\hat{m_t}$$
+
+```python
+def gradient_descent_Adam(
+    df, x, alpha=0.01, beta_1=0.9, beta_2=0.999, iterations=100, epsilon=1e-8
+):
+    history = [x]
+    m = np.zeros_like(x)
+    v = np.zeros_like(x)
+    for t in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        m = beta_1 * m + (1 - beta_1) * grad
+        v = beta_2 * v + (1 - beta_2) * grad**2
+        m_1 = m / (1 - np.power(beta_1, t + 1))
+        v_1 = v / (1 - np.power(beta_2, t + 1))
+        x = x - alpha * m_1 / (np.sqrt(v_1) + epsilon)
+        history.append(x)
+    return history
+```
+
+```python
+path = gradient_descent_Adam(
+    df, x0, alpha=0.001, beta_1=0.9, beta_2=0.8, iterations=100000
+)
+print(f"Minimum point located at (x, y)={tuple(path[-1])}")
+```
+<details open>
+<summary>Output</summary>
+
+```
+Minimum point located at (x, y)=(2.9999675471476204, 0.5000322686072319)
+```
+
+</details>
+
+
+![](../assets/beale_function_gradient_descent_adam_path.png)

@@ -78,10 +78,46 @@ def gradient_descent_Adadelta(df, x, alpha=0.1, rho=0.9, iterations=100, epsilon
         if np.max(np.abs(df(x))) < epsilon:
             break
         grad = df(x)
-        Eg = rho * Eg + (1 - rho) * (grad**2)
+        Eg = rho * Eg + (1 - rho) * grad**2
         delta = np.sqrt((Edelta + epsilon) / (Eg + epsilon)) * grad
         x = x - alpha * delta
-        Edelta = rho * Edelta + (1 - rho) * (delta**2)
+        Edelta = rho * Edelta + (1 - rho) * delta**2
         history.append(x)
     return history
 # end::gradient_descent_adadelta
+
+
+# tag::gradient_descent_rmsprop
+def gradient_descent_RMSprop(df, x, alpha=0.01, beta=0.9, iterations=100, epsilon=1e-8):
+    history = [x]
+    v = np.zeros_like(x)
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        v = beta * v + (1 - beta) * grad**2
+        x = x - alpha * grad / (np.sqrt(v) + epsilon)
+        history.append(x)
+    return history
+# end::gradient_descent_rmsprop
+
+
+# tag::gradient_descent_adam
+def gradient_descent_Adam(
+    df, x, alpha=0.01, beta_1=0.9, beta_2=0.999, iterations=100, epsilon=1e-8
+):
+    history = [x]
+    m = np.zeros_like(x)
+    v = np.zeros_like(x)
+    for t in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        m = beta_1 * m + (1 - beta_1) * grad
+        v = beta_2 * v + (1 - beta_2) * grad**2
+        m_1 = m / (1 - np.power(beta_1, t + 1))
+        v_1 = v / (1 - np.power(beta_2, t + 1))
+        x = x - alpha * m_1 / (np.sqrt(v_1) + epsilon)
+        history.append(x)
+    return history
+# end::gradient_descent_adam

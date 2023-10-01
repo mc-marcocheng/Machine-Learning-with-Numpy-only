@@ -91,6 +91,13 @@ $$x=
  b \\
  \end{pmatrix} $$
 
+$$\begin{pmatrix}
+ x^{(1)} \\
+ x^{(2)} \\
+ \vdots \\
+ x^{(m)} \\
+ \end{pmatrix}$$
+
 We can write
 $$\frac{\partial L}{\partial w}=\text{mean}((wx+b-y)\odot x)$$
 $$\frac{\partial L}{\partial b}=\text{mean}(wx+b-y)$$

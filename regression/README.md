@@ -27,7 +27,14 @@ $$\frac{\partial L}{\partial b}=\sum(wx^{(i)}+b-y^{(i)})=0$$
 
 Denote
 
-$$X=\left(\begin{matrix}1&w^{(1)} \\ 1&x^{(2)} \\ 1&\vdots \\ 1&w^{(m)}\end{matrix}\right),\qquad W=\left(\begin{matrix}b \\ w\end{matrix}\right),\qquad y=\left(\begin{matrix}y^{(1)} \\ y^{(2)} \\ \vdots \\ y^{(m)}\end{matrix}\right)$$
+$$X=\left(\begin{matrix}1&w^{(1)} \\
+1&x^{(2)} \\
+1&\vdots \\
+1&w^{(m)}\end{matrix}\right),\qquad W=\left(\begin{matrix}b \\
+w\end{matrix}\right),\qquad y=\left(\begin{matrix}y^{(1)} \\
+y^{(2)} \\
+\vdots \\
+y^{(m)}\end{matrix}\right)$$
 
 The equations can be rewritten as:
 $$\left(\begin{matrix}1&1&\cdots&1\\x^{(1)}&x^{(2)}&\cdots&x^{(m)}\end{matrix}\right)\left(\begin{matrix}b+wx^{(1)}-y^{(1)}\\b+wx^{(2)}-y^{(2)}\\\vdots\\b+wx^{(m)}-y^{(m)}\end{matrix}\right)=0$$

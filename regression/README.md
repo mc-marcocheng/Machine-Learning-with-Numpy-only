@@ -69,6 +69,7 @@ $$w:=w-\alpha\frac{\partial L}{\partial w}$$
 $$b:=w-\alpha\frac{\partial L}{\partial b}$$
 
 Denote
+
 $$x=
  \begin{pmatrix}
  x^{(1)} \\

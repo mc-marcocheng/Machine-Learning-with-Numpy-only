@@ -334,3 +334,142 @@ Minimum point located at (x, y)=(2.9999675471476204, 0.5000322686072319)
 
 
 ![](../assets/beale_function_gradient_descent_adam_path.png)
+
+# Gradient
+We can approxiate the gradient of a function with:
+$$\frac{\partial f(x)}{\partial x}=\lim_{\epsilon\to 0}\frac{f(x+\epsilon)-f(x-\epsilon)}{2\epsilon}$$
+
+We can write a general function for approximating the gradient of a function:
+```python
+def numerical_gradient(f, params, eps=1e-6):
+    numerical_grads = []
+    for x in params:
+        grad = np.zeros(x.shape)
+        it = np.nditer(x, flags=["multi_index"], op_flags=["readwrite"])
+        while not it.finished:
+            idx = it.multi_index
+            old_value = x[idx]
+            x[idx] = old_value + eps
+            fx = f()
+            x[idx] = old_value - eps
+            fx_ = f()
+            grad[idx] = (fx - fx_) / (2 * eps)
+            x[idx] = old_value
+            it.iternext()
+        numerical_grads.append(grad)
+    return numerical_grads
+```
+
+Take function $f(x,y)=\frac{1}{16}x^2+9y^2$ as an example. Its gradient at $(2,3)$ can be approximated by:
+```python
+f = lambda x: (1 / 16) * x[0] ** 2 + 9 * x[1] ** 2
+param = np.array([2.0, 3.0])
+numerical_grads = numerical_gradient(lambda: f(param), [param])
+print(numerical_grads[0])
+```
+<details open>
+<summary>Output</summary>
+
+```
+[ 0.25       54.00000001]
+```
+
+</details>
+
+
+We can check that the gradient value is indeed correct:
+
+$$\frac{\partial f}{\partial x}=\frac{1}{8}x$$
+
+$$\left.\frac{\partial f}{\partial x}\right|_{(x,y)=(2,3)}=\frac{1}{4}=0.25$$
+
+$$\frac{\partial f}{\partial y}=18y$$
+
+$$\left.\frac{\partial f}{\partial y}\right|_{(x,y)=(2,3)}=54$$
+
+# Optimizer
+
+To achieve generalization and code reusability, we can design an optimizer that can update the weights / parameters based on the gradient.
+
+```python
+class Optimizer(ABC):
+    def __init__(self, params):
+        self.params = params
+
+    @abstractmethod
+    def step(self, grads):
+        pass
+
+    def parameters(self):
+        return self.params
+```
+
+Different gradient descent method will have different update method implementation. The `step` method will update the parameter one time, representing one iteration. Here is the most basic gradient descent implementation:
+
+```python
+class SGD(Optimizer):
+    def __init__(self, params, learning_rate):
+        super().__init__(params)
+        self.lr = learning_rate
+
+    def step(self, grads):
+        for i in range(len(self.parmas)):
+            self.params[i] -= self.lr * grads[i]
+        return self.params
+```
+
+Another example with Momentum:
+
+```python
+class SGD_Momentum(Optimizer):
+    def __init__(self, params, learning_rate, gamma):
+        super().__init__(params)
+        self.lr = learning_rate
+        self.gamma = gamma
+        self.v = []
+        for param in params:
+            self.v.append(np.zeros_like(param))
+
+    def step(self, grads):
+        for i in range(len(self.params)):
+            self.v[i] = self.gamma * self.v[i] + self.lr * grads[i]
+            self.params[i] -= self.v[i]
+        return self.params
+```
+
+We also need a function that actually can make use of a given optimizer to update the parameters until they converge:
+
+```python
+def gradient_descent_(df, optimizer, iterations, epsilon=1e-8):
+    (x,) = optimizer.parameters()
+    x = x.copy()
+    history = [x]
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        (x,) = optimizer.step([grad])
+        x = x.copy()
+        history.append(x)
+    return history
+```
+
+Using this general function to find the minimum point for $f(x,y)=\frac{1}{16}x^2+9y^2$ as an example with `SGD` optimizer:
+```python
+df = lambda x: np.array((1 / 8 * x[0], 18 * x[1]))
+x0 = np.array([-2.4, 0.2])
+optimizer = SGD([x0], 0.1)
+path = gradient_descent_(df, optimizer, 100)
+print(path[-1])
+```
+![[ +gradient_descent.snippets.optimizer_example_1 ]]
+
+It is obviously true that the minimum point for that function is at $(x,y)=(0,0)$.
+
+Another example with `SGD_Momentum` optimizer:
+```python
+x0 = np.array([-2.4, 0.2])
+optimizer = SGD_Momentum([x0], 0.1)
+path = gradient_descent_(df, optimizer, 100)
+print(path[-1])
+```

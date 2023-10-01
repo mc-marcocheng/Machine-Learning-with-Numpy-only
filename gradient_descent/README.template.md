@@ -188,3 +188,67 @@ ${{ beale_function_gradient_descent_adam }}
 $[[ +gradient_descent.snippets.gradient_descent_adam ]]
 
 ![](../assets/beale_function_gradient_descent_adam_path.png)
+
+# Gradient
+We can approxiate the gradient of a function with:
+$$\frac{\partial f(x)}{\partial x}=\lim_{\epsilon\to 0}\frac{f(x+\epsilon)-f(x-\epsilon)}{2\epsilon}$$
+
+We can write a general function for approximating the gradient of a function:
+```python
+${{ numerical_gradient_descent }}
+```
+
+Take function $f(x,y)=\frac{1}{16}x^2+9y^2$ as an example. Its gradient at $(2,3)$ can be approximated by:
+```python
+${{ numerical_gradient_eg }}
+```
+$[[ +gradient_descent.snippets.numerical_gradient_example ]]
+
+We can check that the gradient value is indeed correct:
+
+$$\frac{\partial f}{\partial x}=\frac{1}{8}x$$
+
+$$\left.\frac{\partial f}{\partial x}\right|_{(x,y)=(2,3)}=\frac{1}{4}=0.25$$
+
+$$\frac{\partial f}{\partial y}=18y$$
+
+$$\left.\frac{\partial f}{\partial y}\right|_{(x,y)=(2,3)}=54$$
+
+# Optimizer
+
+To achieve generalization and code reusability, we can design an optimizer that can update the weights / parameters based on the gradient.
+
+```python
+${{ optimizer }}
+```
+
+Different gradient descent method will have different update method implementation. The `step` method will update the parameter one time, representing one iteration. Here is the most basic gradient descent implementation:
+
+```python
+${{ SGD_optimizer }}
+```
+
+Another example with Momentum:
+
+```python
+${{ SGD_momentum_optimizer }}
+```
+
+We also need a function that actually can make use of a given optimizer to update the parameters until they converge:
+
+```python
+${{ gradient_descent_general }}
+```
+
+Using this general function to find the minimum point for $f(x,y)=\frac{1}{16}x^2+9y^2$ as an example with `SGD` optimizer:
+```python
+${{ gradient_descent_general_SGD }}
+```
+![[ +gradient_descent.snippets.optimizer_example_1 ]]
+
+It is obviously true that the minimum point for that function is at $(x,y)=(0,0)$.
+
+Another example with `SGD_Momentum` optimizer:
+```python
+${{ gradient_descent_general_SGD_momentum }}
+```

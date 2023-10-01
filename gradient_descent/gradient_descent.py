@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LogNorm
@@ -121,3 +123,85 @@ def gradient_descent_Adam(
         history.append(x)
     return history
 # end::gradient_descent_adam
+
+
+# tag::numerical_gradient_descent
+def numerical_gradient(f, params, eps=1e-6):
+    numerical_grads = []
+    for x in params:
+        grad = np.zeros(x.shape)
+        it = np.nditer(x, flags=["multi_index"], op_flags=["readwrite"])
+        while not it.finished:
+            idx = it.multi_index
+            old_value = x[idx]
+            x[idx] = old_value + eps
+            fx = f()
+            x[idx] = old_value - eps
+            fx_ = f()
+            grad[idx] = (fx - fx_) / (2 * eps)
+            x[idx] = old_value
+            it.iternext()
+        numerical_grads.append(grad)
+    return numerical_grads
+# end::numerical_gradient_descent
+
+
+# tag::optimizer
+class Optimizer(ABC):
+    def __init__(self, params):
+        self.params = params
+
+    @abstractmethod
+    def step(self, grads):
+        pass
+
+    def parameters(self):
+        return self.params
+# end::optimizer
+
+
+# tag::SGD_optimizer
+class SGD(Optimizer):
+    def __init__(self, params, learning_rate):
+        super().__init__(params)
+        self.lr = learning_rate
+
+    def step(self, grads):
+        for i in range(len(self.parmas)):
+            self.params[i] -= self.lr * grads[i]
+        return self.params
+# end::SGD_optimizer
+
+
+# tag::SGD_momentum_optimizer
+class SGD_Momentum(Optimizer):
+    def __init__(self, params, learning_rate, gamma):
+        super().__init__(params)
+        self.lr = learning_rate
+        self.gamma = gamma
+        self.v = []
+        for param in params:
+            self.v.append(np.zeros_like(param))
+
+    def step(self, grads):
+        for i in range(len(self.params)):
+            self.v[i] = self.gamma * self.v[i] + self.lr * grads[i]
+            self.params[i] -= self.v[i]
+        return self.params
+# end::SGD_momentum_optimizer
+
+
+# tag::gradient_descent_general
+def gradient_descent_(df, optimizer, iterations, epsilon=1e-8):
+    (x,) = optimizer.parameters()
+    x = x.copy()
+    history = [x]
+    for _ in range(iterations):
+        if np.max(np.abs(df(x))) < epsilon:
+            break
+        grad = df(x)
+        (x,) = optimizer.step([grad])
+        x = x.copy()
+        history.append(x)
+    return history
+# end::gradient_descent_general

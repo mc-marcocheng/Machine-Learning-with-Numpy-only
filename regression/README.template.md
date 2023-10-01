@@ -209,3 +209,40 @@ $[[ +regression.snippets.multivariate_linear_regression_gradient_descent ]]
 The loss value decreases over time:
 
 ![](../assets/multivariate_plane_loss_history.png)
+
+# Caveats
+We have a slightly more complicated dataset:
+
+![](../assets/water_dataset.png)
+
+Using linear regression to fit the dataset:
+```python
+${{ water_linear_regression }}
+```
+$[[ +regression.snippets.water_plot ]]
+
+![](../assets/water_linear_regression.png)
+
+Clearly, using a linear function to fit the data is not the best choice for this dataset. This is a phenomenon called underfitting when we use a too simple model. We can use more complex models such as polynomial functions to represent non-linear relationships. We now assume
+
+$$f(x)=w_3x^3+w_2x^2+w_1x+w_0=\begin{pmatrix}1&x&x^2&x^3\end{pmatrix}\begin{pmatrix}w_0&w_1&w_2&w_3\end{pmatrix}^T=xw$$
+
+We try to solve it:
+```python
+${{ water_linear_regression_nan }}
+```
+$[[ +regression.snippets.water_nan ]]
+
+We can see from the result that it did not converge. This is because the values in our features are large, causing the large gradients.
+
+## Standardization
+One solution to the above caveat is standardization.
+
+$$x\leftarrow\frac{x-\text{mean}(x)}{\text{std}(x)}$$
+
+```python
+${{ water_linear_regression_standardization }}
+```
+$[[ +regression.snippets.water_standardization ]]
+
+![](../assets/water_standardization.png)

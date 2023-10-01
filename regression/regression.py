@@ -107,3 +107,26 @@ def compute_loss_history(X, y, w_history):
         errors = X @ w[1:] + w[0] - y
         loss_history.append((errors**2).mean() / 2)
     return loss_history
+
+
+def plot_history_predict(X, y, w, loss_history, fig_size=(12, 4)):
+    fig = plt.gcf()
+    fig.set_size_inches(fig_size[0], fig_size[1], forward=True)
+    plt.subplot(1, 2, 1)
+    plt.plot(loss_history)
+    plt.title("Loss")
+    plt.xlabel("iterations")
+
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    x = X[:, 1]
+
+    predicts = X @ w
+    plt.subplot(1, 2, 2)
+    plt.scatter(x, predicts)
+
+    indices = x.argsort()
+    sorted_x = x[indices[::-1]]
+    sorted_predicts = predicts[indices[::-1]]
+    plt.plot(sorted_x, sorted_predicts, color="red")
+    plt.scatter(x, y)
+    plt.title("Prediction")

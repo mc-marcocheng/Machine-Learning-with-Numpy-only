@@ -69,22 +69,26 @@ $$w:=w-\alpha\frac{\partial L}{\partial w}$$
 $$b:=w-\alpha\frac{\partial L}{\partial b}$$
 
 Denote
-$$x=\left(\begin{matrix}
+$$x=
+\begin{pmatrix}
  x^{(1)} \\
  x^{(2)} \\
  \vdots \\
  x^{(m)} \\
- \end{matrix}\right),\qquad y=\left(\begin{matrix}
+ \end{pmatrix}
+ ,\qquad y=
+\begin{pmatrix}
  y^{(1)} \\
  y^{(2)} \\
  \vdots \\
  y^{(m)} \\
- \end{matrix}\right),\qquad b=\left(\begin{matrix}
+ \end{pmatrix},\qquad b=
+\begin{pmatrix}
  b \\
  b \\
  \vdots \\
- b
- \end{matrix}\right)$$
+ b \\
+ \end{pmatrix}$$
 
 We can write
 $$\frac{\partial L}{\partial w}=\text{mean}((wx+b-y)\odot x)$$

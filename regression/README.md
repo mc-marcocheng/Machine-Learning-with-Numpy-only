@@ -26,6 +26,7 @@ $$\frac{\partial L}{\partial w}=\sum(wx^{(i)}+b-y^{(i)})x^{(i)}=0$$
 $$\frac{\partial L}{\partial b}=\sum(wx^{(i)}+b-y^{(i)})=0$$
 
 Denote
+
 $$X=\left(\begin{matrix}1&w^{(1)}\\1&x^{(2)}\\1&\vdots\\1&w^{(m)}\end{matrix}\right),\qquad W=\left(\begin{matrix}b\\w\end{matrix}\right),\qquad y=\left(\begin{matrix}y^{(1)}\\y^{(2)}\\\vdots\\y^{(m)}\end{matrix}\right)$$
 
 The equations can be rewritten as:
@@ -91,19 +92,6 @@ $$x=
  \vdots \\
  b \\
  \end{pmatrix} $$
-
-$$x = \begin{pmatrix}
- x^{(1)} \\
- x^{(2)} \\
- \vdots \\
- x^{(m)} \\
- \end{pmatrix},\qquad y=
- \begin{pmatrix}
- y^{(1)} \\
- y^{(2)} \\
- \vdots \\
- y^{(m)} \\
- \end{pmatrix}$$
 
 We can write
 $$\frac{\partial L}{\partial w}=\text{mean}((wx+b-y)\odot x)$$

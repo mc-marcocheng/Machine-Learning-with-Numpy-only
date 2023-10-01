@@ -154,14 +154,26 @@ We can plot the loss function to see how the loss changes throughout the process
 ![](../assets/food_truck_linear_regression_loss.png)
 
 # Multivariate linear regression
-Assume that now our dataset has $K$ features: $x=\left(\begin{matrix}x_1&x_2&\cdots&x_K\end{matrix}\right)$. The coefficient for each of the features can be grouped into vector form: $w=\left(\begin{matrix}w_1&w_2&\cdots&w_K\end{matrix}\right)$. The objective function is now
+Assume that now our dataset has $K$ features:
+
+$$x=\begin{pmatrix}x_1&x_2&\cdots&x_K\end{pmatrix}$$
+
+The coefficient for each of the features can be grouped into vector form:
+
+$$w=\begin{pmatrix}w_1&w_2&\cdots&w_K\end{pmatrix}$$
+
+The objective function is now
 
 $$f(x)=\left(\begin{matrix}x_1&x_2&\cdots&x_K\end{matrix}\right)\left(\begin{matrix}w_1 \\
 w_2 \\
 \vdots \\
 w_K\end{matrix}\right)+b=xw+b$$
 
-To simplify the equation further, we can write $b=w_0$. Let $w=\left(\begin{matrix}w_0&w_1&w_2&\cdots&w_K\end{matrix}\right)$ and $x=\left(\begin{matrix}1&x_1&x_2&\cdots&x_K\end{matrix}\right)$. Then
+To simplify the equation further, we can write $b=w_0$. Let
+
+$$w=\left(\begin{matrix}w_0&w_1&w_2&\cdots&w_K\end{matrix}\right)\text{ and }x=\left(\begin{matrix}1&x_1&x_2&\cdots&x_K\end{matrix}\right)$$
+
+Then
 
 $$f_w(x)=\left(\begin{matrix}1&x_1&x_2&\cdots&x_K\end{matrix}\right)\left(\begin{matrix}w_0 \\
 w_1 \\

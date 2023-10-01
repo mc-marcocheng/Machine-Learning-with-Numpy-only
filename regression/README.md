@@ -96,11 +96,12 @@ $$x = \begin{pmatrix}
  x^{(2)} \\
  \vdots \\
  x^{(m)} \\
- \end{pmatrix},\qquad x = \begin{pmatrix}
- x^{(1)} \\
- x^{(2)} \\
+ \end{pmatrix},\qquad y=
+ \begin{pmatrix}
+ y^{(1)} \\
+ y^{(2)} \\
  \vdots \\
- x^{(m)} \\
+ y^{(m)} \\
  \end{pmatrix}$$
 
 We can write

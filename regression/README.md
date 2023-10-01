@@ -91,7 +91,7 @@ $$x=
  b \\
  \end{pmatrix} $$
 
-$$\begin{pmatrix}
+$$x = \begin{pmatrix}
  x^{(1)} \\
  x^{(2)} \\
  \vdots \\

@@ -244,7 +244,7 @@ Using this general function to find the minimum point for $f(x,y)=\frac{1}{16}x^
 ```python
 ${{ gradient_descent_general_SGD }}
 ```
-![[ +gradient_descent.snippets.optimizer_example_1 ]]
+$[[ +gradient_descent.snippets.optimizer_example_1 ]]
 
 It is obviously true that the minimum point for that function is at $(x,y)=(0,0)$.
 
@@ -252,3 +252,6 @@ Another example with `SGD_Momentum` optimizer:
 ```python
 ${{ gradient_descent_general_SGD_momentum }}
 ```
+$[[ +gradient_descent.snippets.optimizer_example_2 ]]
+
+This also leads to the correct minimum solution.

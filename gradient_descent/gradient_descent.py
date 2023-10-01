@@ -167,7 +167,7 @@ class SGD(Optimizer):
         self.lr = learning_rate
 
     def step(self, grads):
-        for i in range(len(self.parmas)):
+        for i in range(len(self.params)):
             self.params[i] -= self.lr * grads[i]
         return self.params
 # end::SGD_optimizer

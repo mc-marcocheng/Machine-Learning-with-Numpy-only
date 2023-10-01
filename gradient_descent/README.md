@@ -413,7 +413,7 @@ class SGD(Optimizer):
         self.lr = learning_rate
 
     def step(self, grads):
-        for i in range(len(self.parmas)):
+        for i in range(len(self.params)):
             self.params[i] -= self.lr * grads[i]
         return self.params
 ```
@@ -462,14 +462,33 @@ optimizer = SGD([x0], 0.1)
 path = gradient_descent_(df, optimizer, 100)
 print(path[-1])
 ```
-![[ +gradient_descent.snippets.optimizer_example_1 ]]
+<details open>
+<summary>Output</summary>
+
+```
+[-6.82215640e-01  4.07407195e-11]
+```
+
+</details>
+
 
 It is obviously true that the minimum point for that function is at $(x,y)=(0,0)$.
 
 Another example with `SGD_Momentum` optimizer:
 ```python
 x0 = np.array([-2.4, 0.2])
-optimizer = SGD_Momentum([x0], 0.1)
-path = gradient_descent_(df, optimizer, 100)
+optimizer = SGD_Momentum([x0], 0.1, 0.8)
+path = gradient_descent_(df, optimizer, 1000)
 print(path[-1])
 ```
+<details open>
+<summary>Output</summary>
+
+```
+[-1.49829905e-08 -4.74284398e-10]
+```
+
+</details>
+
+
+This also leads to the correct minimum solution.

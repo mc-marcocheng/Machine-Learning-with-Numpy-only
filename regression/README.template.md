@@ -57,6 +57,7 @@ $$b:=w-\alpha\frac{\partial L}{\partial b}$$
 
 Denote
 $$x=\left(\begin{matrix} x^{(1)} \\\ x^{(2)} \\\ \vdots \\\ x^{(m)} \end{matrix}\right),\qquad y=\left(\begin{matrix} y^{(1)} \\\ y^{(2)} \\\ \vdots \\\ y^{(m)} \end{matrix}\right),\qquad b=\left(\begin{matrix} b \\\ b \\\ \vdots \\\ b \end{matrix}\right)$$
+$$\vec{v} = \begin{bmatrix} X \\\ Y \end{bmatrix}$$
 
 We can write
 $$\frac{\partial L}{\partial w}=\text{mean}((wx+b-y)\odot x)$$

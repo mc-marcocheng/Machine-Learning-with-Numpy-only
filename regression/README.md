@@ -96,6 +96,11 @@ $$x = \begin{pmatrix}
  x^{(2)} \\
  \vdots \\
  x^{(m)} \\
+ \end{pmatrix}, x = \begin{pmatrix}
+ x^{(1)} \\
+ x^{(2)} \\
+ \vdots \\
+ x^{(m)} \\
  \end{pmatrix}$$
 
 We can write

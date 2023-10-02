@@ -258,3 +258,31 @@ ${{ water_linear_regression_standardization }}
 $[[ +regression.snippets.water_standardization ]]
 
 ![](../assets/water_standardization.png)
+
+## Underfitting and Overfitting
+We create a toy dataset with sine curve:
+
+![](../assets/sine_toy_plot.png)
+
+We try to fit the data with different degree of polynomials:
+```python
+${{ sine_underfitting_overfitting }}
+```
+$[[ +regression.snippets.overfitting ]]
+
+![](../assets/sine_underfitting_overfitting.png)
+
+We can see from the plots that 0- and 1-degree polynomials underfits the data, while 9-degree polynomial overfits the training data: it fits the training data very well, while it cannot predict well for other unseen data.
+
+One of the ways to combat the overfitting problem it to increase the training data size. Here, we re-train the 9-degree polynomial linear regression model with more data:
+
+![](../assets/sine_more_data.png)
+
+In general, there are a few ways to relieve the underfitting issue:
+1. Increase number of features
+2. Increase the complexity of model
+
+A few ways to solve the overfitting issue:
+1. Increase training dataset size
+2. Reduce the complexity of model: use a simpler model
+3. Regularization: will be described below

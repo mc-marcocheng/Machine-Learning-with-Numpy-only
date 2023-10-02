@@ -414,3 +414,56 @@ A few ways to solve the overfitting issue:
 1. Increase training dataset size
 2. Reduce the complexity of model: use a simpler model
 3. Regularization: will be described below
+
+## Regularization
+Weights having huge magnitudes is a overfitting indication. In regularization, we penalize large weights in the loss function:
+
+$$L(x;w)=\frac{1}{2m}\sum_{i=1}^m\|x^{(i)}w-y^{(i)}\|^2+\lambda\|w^2\|$$
+
+As our objective is to minimize the loss function, the regularization term $\lambda\|w^2\|$ would need to be minimized. $\lambda$ is a regularization hyperparameter. The larger the $\lambda$ is, the stronger the effect of the regularization term becomes, and the smaller the weight $w$ remains.
+
+The gradient of our new loss function becomes:
+
+$$\nabla L(w)=\frac{1}{m}\sum_{i=1}^m(x^{(i)}w-y^{(i)})x^{(i)}+2\lambda w$$
+
+```python
+def gradient_descent_reg(X, y, reg, alpha, num_iters, gamma=0.8, epsilon=1e-8):
+    w_history = []
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    num_features = X.shape[1]
+    v = np.zeros_like(num_features)
+    w = np.zeros(num_features)
+    for _ in range(num_iters):
+        gradient = X.T @ (X @ w - y) / len(y) + 2 * reg * w
+        if np.max(np.abs(gradient)) < epsilon:
+            break
+        v = gamma * v + alpha * gradient
+        w = w - v
+        w_history.append(w)
+    return w_history
+```
+
+We now use it to fit our 9-degree polynomial linear regression model:
+```python
+x_train_n = np.hstack(tuple(x_train ** (i + 1) for i in range(9)))
+train_means = x_train_n.mean(axis=0)
+train_stdevs = np.std(x_train_n, axis=0, ddof=1)
+x_train_n = (x_train_n - train_means) / train_stdevs
+
+history = gradient_descent_reg(x_train_n, y_train, reg=0.2, alpha=0.3, num_iters=100000)
+print("w:", history[-1])
+```
+<details open>
+<summary>Output</summary>
+
+```
+w: [8.0125638  5.77020132 3.33374366 3.45447778 2.09236532 2.04302421
+ 1.33515407 1.19533911 0.85628787 0.68738516]
+```
+
+</details>
+
+
+![](../assets/water_regularization.png)
+
+We can see that the weights in our trained model is much smaller than before, yet it is able to produce a good result, relieving the overfitting problem.

@@ -286,3 +286,28 @@ A few ways to solve the overfitting issue:
 1. Increase training dataset size
 2. Reduce the complexity of model: use a simpler model
 3. Regularization: will be described below
+
+## Regularization
+Weights having huge magnitudes is a overfitting indication. In regularization, we penalize large weights in the loss function:
+
+$$L(x;w)=\frac{1}{2m}\sum_{i=1}^m\|x^{(i)}w-y^{(i)}\|^2+\lambda\|w^2\|$$
+
+As our objective is to minimize the loss function, the regularization term $\lambda\|w^2\|$ would need to be minimized. $\lambda$ is a regularization hyperparameter. The larger the $\lambda$ is, the stronger the effect of the regularization term becomes, and the smaller the weight $w$ remains.
+
+The gradient of our new loss function becomes:
+
+$$\nabla L(w)=\frac{1}{m}\sum_{i=1}^m(x^{(i)}w-y^{(i)})x^{(i)}+2\lambda w$$
+
+```python
+${{ gradient_descent_reg }}
+```
+
+We now use it to fit our 9-degree polynomial linear regression model:
+```python
+${{ water_regularization }}
+```
+$[[ +regression.snippets.regularization ]]
+
+![](../assets/water_regularization.png)
+
+We can see that the weights in our trained model is much smaller than before, yet it is able to produce a good result, relieving the overfitting problem.

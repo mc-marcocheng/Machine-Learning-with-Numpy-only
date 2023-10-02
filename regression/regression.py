@@ -130,3 +130,34 @@ def plot_history_predict(X, y, w, loss_history, fig_size=(12, 4)):
     plt.plot(sorted_x, sorted_predicts, color="red")
     plt.scatter(x, y)
     plt.title("Prediction")
+
+
+# tag::gradient_descent_reg
+def gradient_descent_reg(X, y, reg, alpha, num_iters, gamma=0.8, epsilon=1e-8):
+    w_history = []
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    num_features = X.shape[1]
+    v = np.zeros_like(num_features)
+    w = np.zeros(num_features)
+    for _ in range(num_iters):
+        gradient = X.T @ (X @ w - y) / len(y) + 2 * reg * w
+        if np.max(np.abs(gradient)) < epsilon:
+            break
+        v = gamma * v + alpha * gradient
+        w = w - v
+        w_history.append(w)
+    return w_history
+# end::gradient_descent_reg
+
+
+def loss_reg(w, X, y, reg=0):
+    errors = X @ w[1:] + w[0] - y
+    reg_error = reg * np.sum(np.square(w))
+    return (errors**2).mean() / 2 + reg_error
+
+
+def compute_loss_history_reg(X, y, w_history, reg=0):
+    loss_history = []
+    for w in w_history:
+        loss_history.append(loss_reg(w, X, y, reg))
+    return loss_history

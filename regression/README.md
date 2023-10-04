@@ -510,3 +510,59 @@ We can also add a regularization term in the loss function:
 $$L(w)=-\frac{1}{m}\sum_{i=1}^m\left(y^i\log(f_w(x^i))+(1-y^i)\log(1-f_w(x^i))\right)+\lambda\|w\|^2$$
 Correspondingly, the gradient of $L(w)$ with respect to $w$ is
 $$\nabla_wL(w)=\frac{1}{m}(f-y)^TX+2\lambda w=\frac{1}{w}(\sigma(Xw)-y)^TX+2\lambda w$$
+
+We have another simple toy dataset:
+
+![](../assets/logistic_toy_plot.png)
+
+Logistic regression implementation with regularization and momentum:
+```python
+def gradient_descent_logistic_reg(
+    X, y, lambda_, alpha, num_iters, gamma=0.8, epsilon=1e-8
+):
+    w_history = []
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    num_features = X.shape[1]
+    v = np.zeros_like(num_features)
+    w = np.zeros(num_features)
+    for _ in range(num_iters):
+        gradient = (sigmoid(X @ w) - y).T @ X / len(y)
+        gradient += 2 * lambda_ * w
+        if np.max(np.abs(gradient)) < epsilon:
+            break
+        v = gamma * v + alpha * gradient
+        w = w - v
+        w_history.append(w)
+    return w_history
+```
+
+Apply logistic regression model onto our toy dataset:
+```python
+w_history = gradient_descent_logistic_reg(
+    X, y, lambda_=0.0, alpha=0.01, num_iters=10000
+)
+w = w_history[-1]
+print("w:", w)
+```
+<details open>
+<summary>Output</summary>
+
+```
+w: [11.3920102  -0.55377808 -0.83931251]
+```
+
+</details>
+
+
+## Decision boundary
+We use $f_w(x)=0.5$ to separate the two classes. This is equivalent to $xw=0$.
+
+Our dataset is in two dimensions, so we can write the decision boundary as $w_0+w_1x_1+w_2x_2=0$. Given $w$ and $x_1$, we can find $x_2=-w_0/w_2-w_1x_1/w_2$.
+
+```python
+x1 = np.array([X[:, 0].min() - 1, X[:, 0].max() + 1])
+x2 = -w[0] / w[2] - x1 * w[1] / w[2]
+ax[0].plot(x1, x2, color="k", ls="--", lw=2)
+```
+
+![](../assets/logistic_toy_decision_boundary.png)

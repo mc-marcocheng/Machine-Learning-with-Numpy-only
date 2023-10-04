@@ -161,3 +161,42 @@ def compute_loss_history_reg(X, y, w_history, reg=0):
     for w in w_history:
         loss_history.append(loss_reg(w, X, y, reg))
     return loss_history
+
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+
+# tag::gradient_descent_logistic_regression
+def gradient_descent_logistic_reg(
+    X, y, lambda_, alpha, num_iters, gamma=0.8, epsilon=1e-8
+):
+    w_history = []
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    num_features = X.shape[1]
+    v = np.zeros_like(num_features)
+    w = np.zeros(num_features)
+    for _ in range(num_iters):
+        gradient = (sigmoid(X @ w) - y).T @ X / len(y)
+        gradient += 2 * lambda_ * w
+        if np.max(np.abs(gradient)) < epsilon:
+            break
+        v = gamma * v + alpha * gradient
+        w = w - v
+        w_history.append(w)
+    return w_history
+# end::gradient_descent_logistic_regression
+
+
+def loss_logistic(w, X, y, reg=0.0):
+    f = sigmoid(X @ w[1:] + w[0])
+    loss = -np.mean((np.log(f).T * y + np.log(1 - f).T * (1 - y)))
+    loss += reg * (np.sum(np.square(w)))
+    return loss
+
+
+def loss_history_logistic(w_history, X, y, reg=0.0):
+    loss_history = []
+    for w in w_history:
+        loss_history.append(loss_logistic(w, X, y, reg))
+    return loss_history

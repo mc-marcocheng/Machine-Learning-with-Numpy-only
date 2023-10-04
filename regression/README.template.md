@@ -354,3 +354,29 @@ We can also add a regularization term in the loss function:
 $$L(w)=-\frac{1}{m}\sum_{i=1}^m\left(y^i\log(f_w(x^i))+(1-y^i)\log(1-f_w(x^i))\right)+\lambda\|w\|^2$$
 Correspondingly, the gradient of $L(w)$ with respect to $w$ is
 $$\nabla_wL(w)=\frac{1}{m}(f-y)^TX+2\lambda w=\frac{1}{w}(\sigma(Xw)-y)^TX+2\lambda w$$
+
+We have another simple toy dataset:
+
+![](../assets/logistic_toy_plot.png)
+
+Logistic regression implementation with regularization and momentum:
+```python
+${{ gradient_descent_logistic_regression }}
+```
+
+Apply logistic regression model onto our toy dataset:
+```python
+${{ logistic_regression_toy }}
+```
+$[[ +regression.snippets.logistic_toy_plot ]]
+
+## Decision boundary
+We use $f_w(x)=0.5$ to separate the two classes. This is equivalent to $xw=0$.
+
+Our dataset is in two dimensions, so we can write the decision boundary as $w_0+w_1x_1+w_2x_2=0$. Given $w$ and $x_1$, we can find $x_2=-w_0/w_2-w_1x_1/w_2$.
+
+```python
+${{ logistic_regression_decision_boundary }}
+```
+
+![](../assets/logistic_toy_decision_boundary.png)

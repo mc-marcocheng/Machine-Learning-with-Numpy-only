@@ -499,12 +499,20 @@ $$\frac{\partial L^i}{\partial f^i}=-\left(\frac{y^i}{f^i}-\frac{1-y^i}{1-f^i}\r
 $$\frac{\partial f^i}{\partial z^i}=\sigma(z^i)(1-\sigma(z^i))=f^i(1-f^i)$$
 $$\frac{\partial z^i}{\partial w_j}=x_j^i$$
 
-$$\begin{aligned}\frac{\partial L(w)}{\partial w_j}&=\sum_{i=1}^m\frac{\partial L(w)}{\partial L^i}\times\frac{\partial L^i}{\partial f^i}\times\frac{\partial f^i}{\partial z^i}\times\frac{\partial z^i}{\partial w_j}\\&=\frac{1}{m}\sum_{i=1}^m\frac{f^i-y^i}{f^i(1-f^i)}\times f^i(1-f^i)\times x_j^i\\&=\frac{1}{m}\sum_{i=1}^m(f^i-y^i)x_j^i\\&=\frac{1}{m}\sum_{i=1}^mx_j^i(f_w(x^i)-y^i)\end{aligned}$$
+$$\begin{aligned}\frac{\partial L(w)}{\partial w_j}&=\sum_{i=1}^m\frac{\partial L(w)}{\partial L^i}\times\frac{\partial L^i}{\partial f^i}\times\frac{\partial f^i}{\partial z^i}\times\frac{\partial z^i}{\partial w_j} \\
+&=\frac{1}{m}\sum_{i=1}^m\frac{f^i-y^i}{f^i(1-f^i)}\times f^i(1-f^i)\times x_j^i \\
+&=\frac{1}{m}\sum_{i=1}^m(f^i-y^i)x_j^i \\
+&=\frac{1}{m}\sum_{i=1}^mx_j^i(f_w(x^i)-y^i)\end{aligned}$$
 
-$$\begin{aligned}\nabla_w L(w)&=\begin{bmatrix}\frac{\partial L(w)}{\partial w_0}&\frac{\partial L(w)}{\partial w_1}&\frac{\partial L(w)}{\partial w_2}&\cdots&\frac{\partial L(w)}{\partial w_n}\end{bmatrix}\\&=\begin{bmatrix}\frac{1}{m}\sum_{i=1}^mx_0^i(f_w(x^i)-y^i)&\frac{1}{m}\sum_{i=1}^mx_1^i(f_w(x^i)-y^i)&\cdots&\frac{1}{m}\sum_{i=1}^mx_n^i(f_w(x^i)-y^i)\end{bmatrix}\\&=\frac{1}{m}\sum_{i=1}^m\begin{bmatrix}x_0^i(f_w(x^i)-y^i)&x_1^i(f_w(x^i)-y^i)&\cdots&x_n^i(f_w(x^i)-y^i)\end{bmatrix}\\&=\frac{1}{m}\sum_{i=1}^m\begin{bmatrix}x_0^i&x_1^i&\cdots&x_n^i\end{bmatrix}(f_w(x^i)-y^i)\\&=\frac{1}{m}\sum_{i=1}^m(f_w(x^i)-y^i)x^i\\&=\frac{1}{m}\begin{bmatrix}f_w(x^1)-y^1&f_w(x^2)-y^2&\cdots&f_w(x^m)-y^m\end{bmatrix}\begin{bmatrix}x^1 \\
+$$\begin{aligned}\nabla_w L(w)&=\begin{bmatrix}\frac{\partial L(w)}{\partial w_0}&\frac{\partial L(w)}{\partial w_1}&\frac{\partial L(w)}{\partial w_2}&\cdots&\frac{\partial L(w)}{\partial w_n}\end{bmatrix} \\
+&=\begin{bmatrix}\frac{1}{m}\sum_{i=1}^mx_0^i(f_w(x^i)-y^i)&\frac{1}{m}\sum_{i=1}^mx_1^i(f_w(x^i)-y^i)&\cdots&\frac{1}{m}\sum_{i=1}^mx_n^i(f_w(x^i)-y^i)\end{bmatrix} \\
+&=\frac{1}{m}\sum_{i=1}^m\begin{bmatrix}x_0^i(f_w(x^i)-y^i)&x_1^i(f_w(x^i)-y^i)&\cdots&x_n^i(f_w(x^i)-y^i)\end{bmatrix} \\
+&=\frac{1}{m}\sum_{i=1}^m\begin{bmatrix}x_0^i&x_1^i&\cdots&x_n^i\end{bmatrix}(f_w(x^i)-y^i) \\
+&=\frac{1}{m}\sum_{i=1}^m(f_w(x^i)-y^i)x^i\\&=\frac{1}{m}\begin{bmatrix}f_w(x^1)-y^1&f_w(x^2)-y^2&\cdots&f_w(x^m)-y^m\end{bmatrix}\begin{bmatrix}x^1 \\
 x^2 \\
 \vdots \\
-x^m\end{bmatrix}\\&=\frac{1}{m}(f_w(x)-y)^TX=\frac{1}{m}(\sigma(Xw)-y)^TX\end{aligned}$$
+x^m\end{bmatrix} \\
+&=\frac{1}{m}(f_w(x)-y)^TX=\frac{1}{m}(\sigma(Xw)-y)^TX\end{aligned}$$
 
 We can also add a regularization term in the loss function:
 $$L(w)=-\frac{1}{m}\sum_{i=1}^m\left(y^i\log(f_w(x^i))+(1-y^i)\log(1-f_w(x^i))\right)+\lambda\|w\|^2$$

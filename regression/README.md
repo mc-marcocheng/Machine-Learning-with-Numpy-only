@@ -467,3 +467,102 @@ w: [8.0125638  5.77020132 3.33374366 3.45447778 2.09236532 2.04302421
 ![](../assets/water_regularization.png)
 
 We can see that the weights in our trained model is much smaller than before, yet it is able to produce a good result, relieving the overfitting problem.
+
+# Logistic Regression
+In linear regression, the target values are continuous. However, sometimes our target values have to be discrete. For example in classification problems, we have to group a point into a class. We can consider logistic regression as an extension of linear regression, specializing in binary classification problems.
+
+Logistic regression sets the value of $f_w(x)$ to be between 0 and 1, representing the probability of $x$ being in a class. If we use $f_w(x)$ to represent the probability of $x$ being class $y=1$, then the probability of $x$ being class $y=0$ is $1-f_w(x)$.
+
+$$P(y=1|x)=f_w(x)=\frac{1}{1+e^{-xw}}=\sigma(xw)$$
+
+$$P(y=0|x)=1-f_w(x)=1-\frac{1}{1+e^{-xw}}=1-\sigma(xw)$$
+
+For a data $x$, it has a $P(y=1|x)$ probability of being $y=1$, and a $P(y=0|x)$ probability of being $y=0$. We can say that it has a probability of $P(y=1|x)^yP(y=0|x)^{1-y}=f_w(x)^y(1-f_w(x))^{1-y}$ being sample $(x,y)$. For a dataset with $m$ samples, the probability of forming an exact dataset is
+$$\prod_{i=1}^m\left(f_w(x^i)^{y^i}(1-f_w(x^i))^{1-y^i}\right)$$
+
+We want to find the $w$ that makes the dataset most likely to happen. By taking logarithm, it is equivalent to maximizing:
+$$\sum_{i=1}^m\left(y^i\log(f_w(x^i))+(1-y^i)\log(1-f_w(x^i))\right)$$
+
+Hence, our loss function can be written as:
+$$L(w)=-\frac{1}{m}\sum_{i=1}^m\left(y^i\log(f_w(x^i))+(1-y^i)\log(1-f_w(x^i))\right)$$
+
+$-\left(y^i\log(f_w(x^i))+(1-y^i)\log(1-f_w(x^i))\right)$ is known as the cross-entropy loss. Only when the predicted value $f_w(x^i)$ for a sample $x^i$ matches its label $y^i$ can the cross-entropy loss becomes 0.
+
+To find the minimum of $L(w)$, we need gradient descent, thus we need to know how to find the gradient of $L(w)$. Denote
+$$z^i=w\odot x^i,\quad f^i=\sigma(z^i),\quad L^i=-\left(y^i\log(f^i)+(1-y^i)\log(1-f^i)\right)$$
+Then
+$$L(w)=\frac{1}{m}\sum_{i=1}^mL^i$$
+
+For a given $i$ and $j$,
+$$\frac{\partial L(w)}{\partial L^i}=\frac{1}{m}$$
+$$\frac{\partial L^i}{\partial f^i}=-\left(\frac{y^i}{f^i}-\frac{1-y^i}{1-f^i}\right)=\frac{f^i-y^i}{f^i(1-f^i)}$$
+$$\frac{\partial f^i}{\partial z^i}=\sigma(z^i)(1-\sigma(z^i))=f^i(1-f^i)$$
+$$\frac{\partial z^i}{\partial w_j}=x_j^i$$
+
+$$\begin{aligned}\frac{\partial L(w)}{\partial w_j}&=\sum_{i=1}^m\frac{\partial L(w)}{\partial L^i}\times\frac{\partial L^i}{\partial f^i}\times\frac{\partial f^i}{\partial z^i}\times\frac{\partial z^i}{\partial w_j}\\&=\frac{1}{m}\sum_{i=1}^m\frac{f^i-y^i}{f^i(1-f^i)}\times f^i(1-f^i)\times x_j^i\\&=\frac{1}{m}\sum_{i=1}^m(f^i-y^i)x_j^i\\&=\frac{1}{m}\sum_{i=1}^mx_j^i(f_w(x^i)-y^i)\end{aligned}$$
+
+$$\begin{aligned}\nabla_w L(w)&=\begin{bmatrix}\frac{\partial L(w)}{\partial w_0}&\frac{\partial L(w)}{\partial w_1}&\frac{\partial L(w)}{\partial w_2}&\cdots&\frac{\partial L(w)}{\partial w_n}\end{bmatrix}\\&=\begin{bmatrix}\frac{1}{m}\sum_{i=1}^mx_0^i(f_w(x^i)-y^i)&\frac{1}{m}\sum_{i=1}^mx_1^i(f_w(x^i)-y^i)&\cdots&\frac{1}{m}\sum_{i=1}^mx_n^i(f_w(x^i)-y^i)\end{bmatrix}\\&=\frac{1}{m}\sum_{i=1}^m\begin{bmatrix}x_0^i(f_w(x^i)-y^i)&x_1^i(f_w(x^i)-y^i)&\cdots&x_n^i(f_w(x^i)-y^i)\end{bmatrix}\\&=\frac{1}{m}\sum_{i=1}^m\begin{bmatrix}x_0^i&x_1^i&\cdots&x_n^i\end{bmatrix}(f_w(x^i)-y^i)\\&=\frac{1}{m}\sum_{i=1}^m(f_w(x^i)-y^i)x^i\\&=\frac{1}{m}\begin{bmatrix}f_w(x^1)-y^1&f_w(x^2)-y^2&\cdots&f_w(x^m)-y^m\end{bmatrix}\begin{bmatrix}x^1 \\
+x^2 \\
+\vdots \\
+x^m\end{bmatrix}\\&=\frac{1}{m}(f_w(x)-y)^TX=\frac{1}{m}(\sigma(Xw)-y)^TX\end{aligned}$$
+
+We can also add a regularization term in the loss function:
+$$L(w)=-\frac{1}{m}\sum_{i=1}^m\left(y^i\log(f_w(x^i))+(1-y^i)\log(1-f_w(x^i))\right)+\lambda\|w\|^2$$
+Correspondingly, the gradient of $L(w)$ with respect to $w$ is
+$$\nabla_wL(w)=\frac{1}{m}(f-y)^TX+2\lambda w=\frac{1}{w}(\sigma(Xw)-y)^TX+2\lambda w$$
+
+We have another simple toy dataset:
+
+![](../assets/logistic_toy_plot.png)
+
+Logistic regression implementation with regularization and momentum:
+```python
+def gradient_descent_logistic_reg(
+    X, y, lambda_, alpha, num_iters, gamma=0.8, epsilon=1e-8
+):
+    w_history = []
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    num_features = X.shape[1]
+    v = np.zeros_like(num_features)
+    w = np.zeros(num_features)
+    for _ in range(num_iters):
+        gradient = (sigmoid(X @ w) - y).T @ X / len(y)
+        gradient += 2 * lambda_ * w
+        if np.max(np.abs(gradient)) < epsilon:
+            break
+        v = gamma * v + alpha * gradient
+        w = w - v
+        w_history.append(w)
+    return w_history
+```
+
+Apply logistic regression model onto our toy dataset:
+```python
+w_history = gradient_descent_logistic_reg(
+    X, y, lambda_=0.0, alpha=0.01, num_iters=10000
+)
+w = w_history[-1]
+print("w:", w)
+```
+<details open>
+<summary>Output</summary>
+
+```
+w: [11.3920102  -0.55377808 -0.83931251]
+```
+
+</details>
+
+
+## Decision boundary
+We use $f_w(x)=0.5$ to separate the two classes. This is equivalent to $xw=0$.
+
+Our dataset is in two dimensions, so we can write the decision boundary as $w_0+w_1x_1+w_2x_2=0$. Given $w$ and $x_1$, we can find $x_2=-w_0/w_2-w_1x_1/w_2$.
+
+```python
+x1 = np.array([X[:, 0].min() - 1, X[:, 0].max() + 1])
+x2 = -w[0] / w[2] - x1 * w[1] / w[2]
+ax[0].plot(x1, x2, color="k", ls="--", lw=2)
+```
+
+![](../assets/logistic_toy_decision_boundary.png)

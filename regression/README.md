@@ -574,3 +574,149 @@ ax[0].plot(x1, x2, color="k", ls="--", lw=2)
 ```
 
 ![](../assets/logistic_toy_decision_boundary.png)
+
+# Softmax
+Logistic regression can solve binary classification problems, but in many situations, we have to deal with multi-class classification problems, such as digit recognition. Logistic regression only outputs a value representing whether a data is more likely to be in one class than the other. In softmax regression, it can output the same number of numbers as the number of classes available, each representing the probability of the data belonging to the class.
+
+## Softmax function
+Let $z=\begin{pmatrix}z_1&z_2&z_3&\cdots&z_c\end{pmatrix}$. Let $f$ be the the softmax function. Then
+$$f_i=\frac{e^{z_i}}{\sum_{k=1}^C e^{z_k}}$$
+
+To prevent overflow and maintain numerical stability, we can divide both the numerator and denominator by $e^{\max(z)}$:
+$$f_i=\frac{e^{z_i-\max(z)}}{\sum_{k=1}^Ce^{z_k-\max(z)}}$$
+
+```python
+def softmax(x):
+    a = np.max(x, axis=-1, keepdims=True)
+    e_x = np.exp(x - a)
+    return e_x / np.sum(e_x, axis=-1, keepdims=True)
+```
+
+```python
+z = np.array([3.0, 1.0, 2.0])
+print(f"softmax([3.0, 1.0, 2.0]) =\n{softmax(z)}")
+
+z = np.array([[1, 2, 3], [6, 2, 4]])
+print(f"softmax([[1, 2, 3], [6, 2, 4]]) =\n{softmax(z)}")
+```
+<details open>
+<summary>Output</summary>
+
+```
+softmax([3.0, 1.0, 2.0]) =
+[0.66524096 0.09003057 0.24472847]
+softmax([[1, 2, 3], [6, 2, 4]]) =
+[[0.09003057 0.24472847 0.66524096]
+ [0.86681333 0.01587624 0.11731043]]
+```
+
+</details>
+
+
+To determine the gradient of $f(z)=\text{softmax}(z)$ with respect to $z$, let $a_i=e^{z_i}$ and $b=\sum_{k=1}^Ce^{z_k}$. Then we have the following properties:
+
+$$\begin{aligned}\frac{\partial a_i}{\partial z_i}&=\frac{\partial e^{z_i}}{\partial z_i}=e^{z_i}=a_i \\
+\frac{\partial a_i}{\partial z_j}&=\frac{\partial e^{z_i}}{\partial z_j}=0 \\
+\frac{\partial b}{\partial z_i}&=\frac{\partial (\sum_{k=1}^C e^{z_k})}{\partial z_i}=e^{z_i}=a_i\end{aligned}$$
+
+As $f_i=\frac{a_i}{b}$,
+$$\begin{aligned}\frac{\partial f_i}{\partial z_i}&=\frac{\frac{\partial a_i}{\partial z_i}\cdot b-a_i\frac{\partial b}{\partial z_i}}{b^2}=\frac{a_ib-a_ia_i}{b^2}=\frac{a_i}{b}\left(1-\frac{a_i}{b}\right)=f_i(1-f_i)=f_i-f_if_i \\
+\frac{\partial f_i}{\partial z_j}&=\frac{\frac{\partial a_i}{\partial z_j}\cdot b-a_i\frac{\partial b}{\partial z_j}}{b^2}=\frac{0-a_ia_j}{b^2}=-f_if_j \\
+\frac{\partial f}{\partial z}&=\begin{pmatrix}f_1-f_1f_1&-f_1f_2&\cdots&-f_1f_C \\
+-f_2f_1&f_2-f_2f_2&\cdots&-f_2f_C \\
+\vdots&\vdots&\vdots&\vdots \\
+-f_Cf_1&-f_Cf_2&\cdots&f_C-f_Cf_C\end{pmatrix}\end{aligned}$$
+
+We can use outer product to simplify the equation:
+$$f\otimes f=\begin{pmatrix}f_1f_1&f_1f_2&\cdots&f_1f_C \\
+f_2f_1&f_2f_2&\cdots&f_2f_C \\
+\vdots&\vdots&\vdots&\vdots \\
+f_Cf_1&f_Cf_2&\cdots&f_Cf_C\end{pmatrix}$$
+
+```python
+def softmax_gradient(z):
+    f = softmax(z)
+    grad = -np.outer(f, f) + np.diag(f.flatten())
+    return grad
+```
+
+If we know the gradient of a variable $L$ with respect to $f$ ($\nabla_f L=\frac{\partial L}{\partial f}$), then we can find the gradient of $L$ with respect to $z$ by:
+$$\nabla_zL=\frac{\partial L}{\partial z}=\frac{\partial L}{\partial f}\frac{\partial f}{\partial z}$$
+
+```python
+def softmax_backward(z, df):
+    grad = softmax_gradient(z)
+    return df @ grad
+```
+
+```python
+z = np.array([[1, 2]])
+print(f"gradient of softmax(z) =\n{softmax_gradient(z)}")
+df = np.array([1, 3])  # gradient of L w.r.t. f
+print(f"dL/dz =\n{softmax_backward(z, df)}")
+```
+<details open>
+<summary>Output</summary>
+
+```
+gradient of softmax(z) =
+[[ 0.19661193 -0.19661193]
+ [-0.19661193  0.19661193]]
+dL/dz =
+[-0.39322387  0.39322387]
+```
+
+</details>
+
+
+## Softmax regression model
+When we are facing a classification problem that has 3 classes, we can pass through 3 linear regression functions, then their outputs are passed through a softmax function, producing 3 numbers between 0 and 1. It also has the property of $\sum_{i=1}^3=1$.
+
+
+
+![](../assets/softmax_regression_networkx.png)
+
+Similar to what we have done in linear regression, we treat $b_i$ as $w_{0i}$ and $x=\begin{pmatrix}1&x_1&x_2&x_3\end{pmatrix}$. Then the softmax regression function is
+$$f(x)=\text{softmax}(xW_{,1},xW_{,2},xW_{,3})=\text{softmax}(xW)$$
+
+where
+
+$$W_{,i}=\begin{pmatrix}w_{0i} \\
+w_{1i} \\
+w_{2i} \\
+w_{3i}\end{pmatrix}$$
+
+$f_j$ represents the probability of $x$ belonging to class $j$. If the ground truth of label $(x^{(i)},y^{(i)})$ is $y^{(i)}=2$, then the probability of that sample belonging to class 2 is $f_2$, which is $f_{y^{(i)}}$.
+
+For a dataset with $m$ samples, write
+$$Z=XW=\begin{pmatrix}z^{(1)} \\
+z^{(2)} \\
+\vdots \\
+z^{(m)}\end{pmatrix}=\begin{pmatrix}x^{(1)}W \\
+x^{(2)}W \\
+\vdots \\
+x^{(m)}W\end{pmatrix}$$
+
+We can combine all $f^{(i)}$ into a matrix $F$:
+$$F=\begin{pmatrix}f^{(1)} \\
+f^{(2)} \\
+\vdots \\
+f^{(m)}\end{pmatrix}=\begin{pmatrix}\frac{e^{z_1^{(1)}}}{\sum_{i=1}^Ce^{z_i^{(1)}}}&\frac{e^{z_2^{(1)}}}{\sum_{i=1}^Ce^{z_i^{(1)}}}&\cdots&\frac{e^{z_C^{(1)}}}{\sum_{i=1}^Ce^{z_i^{(1)}}} \\
+\frac{e^{z_1^{(2)}}}{\sum_{i=1}^Ce^{z_i^{(2)}}}&\frac{e^{z_2^{(2)}}}{\sum_{i=1}^Ce^{z_i^{(2)}}}&\cdots&\frac{e^{z_C^{(2)}}}{\sum_{i=1}^Ce^{z_i^{(2)}}} \\
+\vdots&\vdots&\vdots&\vdots \\
+\frac{e^{z_1^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}&\frac{e^{z_2^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}&\cdots&\frac{e^{z_C^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}\end{pmatrix}$$
+
+The target values of the samples can be represented by $y$:
+$$y=\begin{pmatrix}y^{(1)} \\
+y^{(2)} \\
+\vdots \\
+y^{(m)}\end{pmatrix}$$
+
+Denote $f_{y^{(i)}}^{(i)}$ as the probability of sample $i$ being in its true class $y^{(i)}$. We can use these probability to construct a vector:
+$$F_y=\begin{pmatrix}f_{y^{(1)}}^{(1)} \\
+f_{y^{(2)}}^{(2)} \\
+\vdots \\
+f_{y^{(m)}}^{(m)}\end{pmatrix}=\begin{pmatrix}\frac{e^{z_{y^{(1)}}^{(1)}}}{\sum_{i=1}^Ce^{z_i^{(1)}}} \\
+\frac{e^{z_{y^{(2)}}^{(2)}}}{\sum_{i=1}^Ce^{z_i^{(2)}}} \\
+\vdots \\
+\frac{e^{z_{y^{(m)}}^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}\end{pmatrix}$$

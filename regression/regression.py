@@ -200,3 +200,26 @@ def loss_history_logistic(w_history, X, y, reg=0.0):
     for w in w_history:
         loss_history.append(loss_logistic(w, X, y, reg))
     return loss_history
+
+
+# tag::softmax
+def softmax(x):
+    a = np.max(x, axis=-1, keepdims=True)
+    e_x = np.exp(x - a)
+    return e_x / np.sum(e_x, axis=-1, keepdims=True)
+# end::softmax
+
+
+# tag::softmax_gradient
+def softmax_gradient(z):
+    f = softmax(z)
+    grad = -np.outer(f, f) + np.diag(f.flatten())
+    return grad
+# end::softmax_gradient
+
+
+# tag::softmax_backward
+def softmax_backward(z, df):
+    grad = softmax_gradient(z)
+    return df @ grad
+# end::softmax_backward

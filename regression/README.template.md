@@ -393,8 +393,8 @@ ${{ logistic_regression_decision_boundary }}
 Logistic regression can solve binary classification problems, but in many situations, we have to deal with multi-class classification problems, such as digit recognition. Logistic regression only outputs a value representing whether a data is more likely to be in one class than the other. In softmax regression, it can output the same number of numbers as the number of classes available, each representing the probability of the data belonging to the class.
 
 ## Softmax function
-Let $z=\begin{pmatrix}z_1&z_2&z_3&\cdots&z_c\end{pmatrix}$. Let $f$ be the the softmax function. Then
-$$f_i=\frac{e^{z_i}}{{\sum_{k=1}^C} e^{z_k}}$$
+Let $z=\left(z_1\quad z_2\quad z_3\quad \cdots\quad z_c\right)$. Let $f$ be the the softmax function. Then
+$$f_i=\frac{e^{z_i}}{\sum_{k=1}^C e^{z_k}}$$
 
 To prevent overflow and maintain numerical stability, we can divide both the numerator and denominator by $e^{\max(z)}$:
 $$f_i=\frac{e^{z_i-\max(z)}}{\sum_{k=1}^Ce^{z_k-\max(z)}}$$
@@ -522,7 +522,7 @@ ${{ cross_entropy_loss_example }}
 ```
 $[[ +regression.snippets.cross_entropy_loss_example ]]
 
-Sometimes, we use a one-hot vector $y^{(i)}=\begin{pmatrix}y_1^{(i)}&y_2^{(i)}&\cdots&y_C^{(i)}\end{pmatrix}$ instead of an integer to represent the class for a sample. In that case, the cross entropy loss for that sample is:
+Sometimes, we use a one-hot vector $y^{(i)}=\left(y_1^{(i)}\quad y_2^{(i)}\quad \cdots\quad y_C^{(i)}\right)$ instead of an integer to represent the class for a sample. In that case, the cross entropy loss for that sample is:
 
 $$-\log\left(f_j^{(i)}\right)=-y_j^{(i)}\log\left(f_j^{(i)}\right)=-\sum_{j=1}^Cy_j^{(i)}\log\left(f_j^{(i)}\right)$$
 

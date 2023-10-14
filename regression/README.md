@@ -73,7 +73,7 @@ print(f"{w=}, {b=}")
 <summary>Output</summary>
 
 ```
-w=1.1930336441895992, b=-3.8957808783119106
+w=1.1930336441895966, b=-3.895780878311875
 ```
 
 </details>
@@ -251,8 +251,8 @@ print(f"Error: {residual}")
 <summary>Output</summary>
 
 ```
-Resulting plane: z = 3.0x + 1.9999999999999996y + 2.7025678477932358
-Error: 8.859551911326592e-15
+Resulting plane: z = 3.0000000000000013x + 2.0y + 2.7025678477932398
+Error: 2.1214267520435092e-14
 ```
 
 </details>
@@ -390,9 +390,9 @@ for i, K in enumerate([0, 1, 3, 9]):
 w for 0-degree polynomial: [-0.19410186]
 w for 1-degree polynomial: [ 1.167293   -2.40352288]
 w for 3-degree polynomial: [ -0.69160733  14.4684786  -40.54048788  27.82130232]
-w for 9-degree polynomial: [-4.06850073e+03  6.68568906e+04 -4.40346312e+05  1.46581475e+06
- -2.40757600e+06  8.34438000e+05  3.70432100e+06 -6.59076900e+06
-  4.56935400e+06 -1.19861275e+06]
+w for 9-degree polynomial: [   -4600.08666992    77664.484375    -534895.          1933308.75
+ -3850268.          3721949.           -50730.         -3526218.
+  3143019.          -909766.875     ]
 ```
 
 </details>
@@ -575,7 +575,7 @@ ax[0].plot(x1, x2, color="k", ls="--", lw=2)
 
 ![](../assets/logistic_toy_decision_boundary.png)
 
-# Softmax
+# Softmax Regression
 Logistic regression can solve binary classification problems, but in many situations, we have to deal with multi-class classification problems, such as digit recognition. Logistic regression only outputs a value representing whether a data is more likely to be in one class than the other. In softmax regression, it can output the same number of numbers as the number of classes available, each representing the probability of the data belonging to the class.
 
 ## Softmax function
@@ -720,3 +720,108 @@ f_{y^{(m)}}^{(m)}\end{pmatrix}=\begin{pmatrix}\frac{e^{z_{y^{(1)}}^{(1)}}}{\sum_
 \frac{e^{z_{y^{(2)}}^{(2)}}}{\sum_{i=1}^Ce^{z_i^{(2)}}} \\
 \vdots \\
 \frac{e^{z_{y^{(m)}}^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}\end{pmatrix}$$
+
+## Multiclass cross entropy loss
+Consider a sample $(x^{(i)},y^{(i)})$. When its feature $x^{(i)}$ passes through the softmax regression model, the output is the probabilities of that sample being classified in each class: $\begin{pmatrix}f_1^{(i)}&f_2^{(i)}&\cdots&f_C^{(i)}\end{pmatrix}$. The probability of the sample being in class $y^{(i)}$ is $f_{y^{(i)}}^{(i)}$. If we have $m$ samples in our dataset, the probability of realizing all of them with our model is
+
+$$\prod_{i=1}^mf_{y^{(i)}}^{(i)}$$
+
+We want to find $W$ for the regression model to maximize this probability. This is equivalent to minimizing the following loss function:
+
+$$L(W)=-\frac{1}{m}\sum_{i=1}^m\log\left(f_{y^{(i)}}^{(i)}\right)$$
+
+We say that $-\log\left(f_{y^{(i)}}^{(i)}\right)$ is the cross entropy loss for sample $i$.
+
+```python
+def cross_entropy(F, y):
+    m = len(F)  # number of samples
+    log_Fy = -np.log(F[range(m), y])
+    return np.sum(log_Fy) / m
+```
+```python
+F = np.array([[0.2, 0.5, 0.3], [0.2, 0.6, 0.2]])
+Y = np.array([2, 1])
+print(cross_entropy(F, Y))
+```
+<details open>
+<summary>Output</summary>
+
+```
+0.8573992140459634
+```
+
+</details>
+
+
+Sometimes, we use a one-hot vector $y^{(i)}=\begin{pmatrix}y_1^{(i)}&y_2^{(i)}&\cdots&y_C^{(i)}\end{pmatrix}$ instead of an integer to represent the class for a sample. In that case, the cross entropy loss for that sample is:
+$$-\log\left(f_j^{(i)}\right)=-y_j^{(i)}\log\left(f_j^{(i)}\right)=-\sum_{j=1}^Cy_j^{(i)}\log\left(f_j^{(i)}\right)$$
+
+The cross entropy loss function for all samples is:
+$$L(W)=-\frac{1}{m}\sum_{i=1}^m\sum_{j=1}^Cy_j^{(i)}\log\left(f_j^{(i)}\right)=-\frac{1}{m}\text{np.sum}\left(Y\odot\log(F)\right)$$
+
+```python
+def cross_entropy_one_hot(F, Y):
+    m = len(F)
+    return -np.sum(Y * np.log(F)) / m
+```
+```python
+F = np.array([[0.2, 0.5, 0.3], [0.2, 0.6, 0.2]])
+Y = np.array([[0, 0, 1], [0, 1, 0]])
+print(cross_entropy_one_hot(F, Y))
+```
+<details open>
+<summary>Output</summary>
+
+```
+0.8573992140459634
+```
+
+</details>
+
+
+Given a dataset with multiple samples $Z$, with their classification labels $y$, we can compute the cross entropy loss for the softmax regression model:
+```python
+def softmax_cross_entropy(Z, y):
+    m = len(Z)
+    F = softmax(Z)
+    log_Fy = -np.log(F[range(m), y])
+    return np.sum(log_Fy) / m
+```
+```python
+Z = np.array([[2, 25, 13], [54, 3, 11]])
+y = np.array([2, 1])
+print(softmax_cross_entropy(Z, y))
+```
+<details open>
+<summary>Output</summary>
+
+```
+31.500003072148047
+```
+
+</details>
+
+
+For one-hot vector label representation, the implementation is just the following:
+```python
+def softmax_cross_entropy_one_hot(Z, y):
+    F = softmax(Z)
+    loss = -np.sum(y * np.log(F), axis=1)
+    return np.mean(loss)
+```
+```python
+Z = np.array([[2, 25, 13], [54, 3, 11]])
+y = np.array([[0, 0, 1], [0, 1, 0]])
+print(softmax_cross_entropy_one_hot(Z, y))
+```
+<details open>
+<summary>Output</summary>
+
+```
+31.500003072148047
+```
+
+</details>
+
+
+## Softmax regression gradient

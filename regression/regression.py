@@ -223,3 +223,35 @@ def softmax_backward(z, df):
     grad = softmax_gradient(z)
     return df @ grad
 # end::softmax_backward
+
+
+# tag::cross_entropy_loss
+def cross_entropy(F, y):
+    m = len(F)  # number of samples
+    log_Fy = -np.log(F[range(m), y])
+    return np.sum(log_Fy) / m
+# end::cross_entropy_loss
+
+
+# tag::cross_entropy_one_hot
+def cross_entropy_one_hot(F, Y):
+    m = len(F)
+    return -np.sum(Y * np.log(F)) / m
+# end::cross_entropy_one_hot
+
+
+# tag::softmax_cross_entropy
+def softmax_cross_entropy(Z, y):
+    m = len(Z)
+    F = softmax(Z)
+    log_Fy = -np.log(F[range(m), y])
+    return np.sum(log_Fy) / m
+# end::softmax_cross_entropy
+
+
+# tag::softmax_cross_entropy_one_hot
+def softmax_cross_entropy_one_hot(Z, y):
+    F = softmax(Z)
+    loss = -np.sum(y * np.log(F), axis=1)
+    return np.mean(loss)
+# end::softmax_cross_entropy_one_hot

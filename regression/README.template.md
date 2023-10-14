@@ -394,7 +394,7 @@ Logistic regression can solve binary classification problems, but in many situat
 
 ## Softmax function
 Let $z=\begin{pmatrix}z_1&z_2&z_3&\cdots&z_c\end{pmatrix}$. Let $f$ be the the softmax function. Then
-$$f_i=\frac{e^{z_i}}{\sum_{k=1}^C e^{z_k}}$$
+$$f_i=\frac{e^{z_i}}{{\sum_{k=1}^C} e^{z_k}}$$
 
 To prevent overflow and maintain numerical stability, we can divide both the numerator and denominator by $e^{\max(z)}$:
 $$f_i=\frac{e^{z_i-\max(z)}}{\sum_{k=1}^Ce^{z_k-\max(z)}}$$
@@ -415,6 +415,7 @@ $$\begin{aligned}\frac{\partial a_i}{\partial z_i}&=\frac{\partial e^{z_i}}{\par
 \frac{\partial b}{\partial z_i}&=\frac{\partial (\sum_{k=1}^C e^{z_k})}{\partial z_i}=e^{z_i}=a_i\end{aligned}$$
 
 As $f_i=\frac{a_i}{b}$,
+
 $$\begin{aligned}\frac{\partial f_i}{\partial z_i}&=\frac{\frac{\partial a_i}{\partial z_i}\cdot b-a_i\frac{\partial b}{\partial z_i}}{b^2}=\frac{a_ib-a_ia_i}{b^2}=\frac{a_i}{b}\left(1-\frac{a_i}{b}\right)=f_i(1-f_i)=f_i-f_if_i \\
 \frac{\partial f_i}{\partial z_j}&=\frac{\frac{\partial a_i}{\partial z_j}\cdot b-a_i\frac{\partial b}{\partial z_j}}{b^2}=\frac{0-a_ia_j}{b^2}=-f_if_j \\
 \frac{\partial f}{\partial z}&=\begin{pmatrix}f_1-f_1f_1&-f_1f_2&\cdots&-f_1f_C \\
@@ -423,6 +424,7 @@ $$\begin{aligned}\frac{\partial f_i}{\partial z_i}&=\frac{\frac{\partial a_i}{\p
 -f_Cf_1&-f_Cf_2&\cdots&f_C-f_Cf_C\end{pmatrix}\end{aligned}$$
 
 We can use outer product to simplify the equation:
+
 $$f\otimes f=\begin{pmatrix}f_1f_1&f_1f_2&\cdots&f_1f_C \\
 f_2f_1&f_2f_2&\cdots&f_2f_C \\
 \vdots&\vdots&\vdots&\vdots \\
@@ -451,7 +453,8 @@ $[[ -regression.snippets.softmax_regression_networkx ]]
 
 ![](../assets/softmax_regression_networkx.png)
 
-Similar to what we have done in linear regression, we treat $b_i$ as $w_{0i}$ and $x=\begin{pmatrix}1&x_1&x_2&x_3\end{pmatrix}$. Then the softmax regression function is
+Similar to what we have done in linear regression, we treat $b_i$ as $w_{0i}$ and $x=\left(1\quad x_1\quad x_2\quad x_3\right)$. Then the softmax regression function is
+
 $$f(x)=\text{softmax}(xW_{,1},xW_{,2},xW_{,3})=\text{softmax}(xW)$$
 
 where
@@ -464,6 +467,7 @@ w_{3i}\end{pmatrix}$$
 $f_j$ represents the probability of $x$ belonging to class $j$. If the ground truth of label $(x^{(i)},y^{(i)})$ is $y^{(i)}=2$, then the probability of that sample belonging to class 2 is $f_2$, which is $f_{y^{(i)}}$.
 
 For a dataset with $m$ samples, write
+
 $$Z=XW=\begin{pmatrix}z^{(1)} \\
 z^{(2)} \\
 \vdots \\
@@ -473,6 +477,7 @@ x^{(2)}W \\
 x^{(m)}W\end{pmatrix}$$
 
 We can combine all $f^{(i)}$ into a matrix $F$:
+
 $$F=\begin{pmatrix}f^{(1)} \\
 f^{(2)} \\
 \vdots \\
@@ -482,12 +487,14 @@ f^{(m)}\end{pmatrix}=\begin{pmatrix}\frac{e^{z_1^{(1)}}}{\sum_{i=1}^Ce^{z_i^{(1)
 \frac{e^{z_1^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}&\frac{e^{z_2^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}&\cdots&\frac{e^{z_C^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}\end{pmatrix}$$
 
 The target values of the samples can be represented by $y$:
+
 $$y=\begin{pmatrix}y^{(1)} \\
 y^{(2)} \\
 \vdots \\
 y^{(m)}\end{pmatrix}$$
 
 Denote $f_{y^{(i)}}^{(i)}$ as the probability of sample $i$ being in its true class $y^{(i)}$. We can use these probability to construct a vector:
+
 $$F_y=\begin{pmatrix}f_{y^{(1)}}^{(1)} \\
 f_{y^{(2)}}^{(2)} \\
 \vdots \\
@@ -497,7 +504,7 @@ f_{y^{(m)}}^{(m)}\end{pmatrix}=\begin{pmatrix}\frac{e^{z_{y^{(1)}}^{(1)}}}{\sum_
 \frac{e^{z_{y^{(m)}}^{(m)}}}{\sum_{i=1}^Ce^{z_i^{(m)}}}\end{pmatrix}$$
 
 ## Multiclass cross entropy loss
-Consider a sample $(x^{(i)},y^{(i)})$. When its feature $x^{(i)}$ passes through the softmax regression model, the output is the probabilities of that sample being classified in each class: $\begin{pmatrix}f_1^{(i)}&f_2^{(i)}&\cdots&f_C^{(i)}\end{pmatrix}$. The probability of the sample being in class $y^{(i)}$ is $f_{y^{(i)}}^{(i)}$. If we have $m$ samples in our dataset, the probability of realizing all of them with our model is
+Consider a sample $(x^{(i)},y^{(i)})$. When its feature $x^{(i)}$ passes through the softmax regression model, the output is the probabilities of that sample being classified in each class: $\left(f_1^{(i)}\quad f_2^{(i)}\quad \cdots\quad f_C^{(i)}\right)$. The probability of the sample being in class $y^{(i)}$ is $f_{y^{(i)}}^{(i)}$. If we have $m$ samples in our dataset, the probability of realizing all of them with our model is
 
 $$\prod_{i=1}^mf_{y^{(i)}}^{(i)}$$
 
@@ -516,9 +523,11 @@ ${{ cross_entropy_loss_example }}
 $[[ +regression.snippets.cross_entropy_loss_example ]]
 
 Sometimes, we use a one-hot vector $y^{(i)}=\begin{pmatrix}y_1^{(i)}&y_2^{(i)}&\cdots&y_C^{(i)}\end{pmatrix}$ instead of an integer to represent the class for a sample. In that case, the cross entropy loss for that sample is:
+
 $$-\log\left(f_j^{(i)}\right)=-y_j^{(i)}\log\left(f_j^{(i)}\right)=-\sum_{j=1}^Cy_j^{(i)}\log\left(f_j^{(i)}\right)$$
 
 The cross entropy loss function for all samples is:
+
 $$L(W)=-\frac{1}{m}\sum_{i=1}^m\sum_{j=1}^Cy_j^{(i)}\log\left(f_j^{(i)}\right)=-\frac{1}{m}\text{np.sum}\left(Y\odot\log(F)\right)$$
 
 ```python

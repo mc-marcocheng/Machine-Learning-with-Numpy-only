@@ -255,3 +255,18 @@ def softmax_cross_entropy_one_hot(Z, y):
     loss = -np.sum(y * np.log(F), axis=1)
     return np.mean(loss)
 # end::softmax_cross_entropy_one_hot
+
+
+# tag::softmax_cross_entropy_gradient
+def grad_softmax_cross_entropy(Z, y):
+    F = softmax(Z)
+    F[range(len(Z)), y] -= 1
+    return F / len(Z)
+# end::softmax_cross_entropy_gradient
+
+
+# tag::softmax_cross_entropy_gradient_one_hot
+def grad_softmax_cross_entropy_one_hot(Z, y):
+    F = softmax(Z)
+    return (F - y) / len(Z)
+# end::softmax_cross_entropy_gradient_one_hot

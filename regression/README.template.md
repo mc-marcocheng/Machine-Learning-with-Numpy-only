@@ -557,3 +557,57 @@ ${{ softmax_cross_entropy_one_hot_example }}
 $[[ +regression.snippets.softmax_cross_entropy_one_hot_example ]]
 
 ## Softmax regression gradient
+
+### Cross entropy loss gradient with respect to weighted sum $z$
+
+Continuing with our 3-class classification problem. Suppose we have sample $(x,y)$. $f(x)=\text{softmax}(xW)$ can be viewed as the composite function of $z=(z_1\quad z_2\quad z_3)=(xW_{,1}\quad xW_{,2}\quad xW_{,3})$ and $f(z)=\text{softmax}(z)$.
+
+Let $a=(a_1\quad a_2\quad a_3)=(e^{z_1}\quad e^{z_2}\quad e^{z_3})$. Then
+
+$$f(z)=\begin{pmatrix}f_1 & f_2 & f_3\end{pmatrix}=\begin{pmatrix}\frac{a_1}{a_1+a_2+a_3}&\frac{a_2}{a_1+a_2+a_3}&\frac{a_3}{a_1+a_2+a_3}\end{pmatrix}$$
+
+$$L=-\log(f_y)=-(\log(a_y)-\log(a_1+a_2+a_3))$$
+
+$$\begin{aligned}\frac{\partial L}{\partial z_i}&=-\frac{1}{a_y}\frac{\partial a_y}{\partial z_i}-\frac{1}{a_1+a_2+a_3}\left(\frac{\partial a_1}{\partial z_i}+\frac{\partial a_2}{\partial z_i}+\frac{\partial a_3}{\partial z_i}\right) \\
+&=-\frac{1}{a_y}\frac{\partial a_y}{\partial z_i}-\frac{1}{a_1+a_2+a_3}e^{z_i} \\
+&=-\frac{1}{a_y}\cdot 1(y==i)e^{z_y}-\frac{1}{a_1+a_2+a_3}e^{z_i} \\
+&=-1(y==i)+\frac{e^{z_i}}{\sum_{j=1}^3 e^{z_j}} \\
+&=f_i-1(y==i)\end{aligned}$$
+
+Therefore, the gradient of $L$ with respect to $z=(z_1\quad z_2\quad z_3)$ is
+
+$$\nabla_z L=\left(\frac{\partial L}{\partial z_1}\quad \frac{\partial L}{\partial z_2}\quad \frac{\partial L}{\partial z_3}\right)=\left(f_1-1(y==1)\quad f_2-1(y==2)\quad f_3-1(y==3)\right)$$
+
+If the class of the sample is $i$, then
+
+$$\nabla_z L=\begin{pmatrix}f_1&f_2&\cdots&f_i-1&\cdots&f_C\end{pmatrix}=f-I_i$$
+
+where $I_i$ is a one-hot vector: the $i$-th element is 1, and other elements are 0.
+
+If the $y$ is already in one-hot vector representation, then $y=I_i$ and $\nabla_z L=f-y$.
+
+Now denote $L$ as the total cross entropy loss for all samples, and $Z$ is the feature matrix for all samples, we have
+
+$$\nabla_ZL=F-Y$$
+
+This matches the gradient of the loss function $\frac{1}{2}\|F-Y\|^2$ from linear regression.
+
+```python
+${{ softmax_cross_entropy_gradient }}
+```
+
+```python
+${{ softmax_cross_entropy_gradient_example }}
+```
+
+We can verify the output with `numerical_gradient` that we implemented [last chapter](../gradient_descent/README.md):
+```python
+${{ softmax_cross_entropy_gradient_validation }}
+```
+
+$[[ +regression.snippets.softmax_cross_entropy_gradient_example ]]
+
+One-hot vector version:
+```python
+${{ softmax_cross_entropy_gradient_one_hot }}
+```

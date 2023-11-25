@@ -270,3 +270,42 @@ def grad_softmax_cross_entropy_one_hot(Z, y):
     F = softmax(Z)
     return (F - y) / len(Z)
 # end::softmax_cross_entropy_gradient_one_hot
+
+
+# tag::gradient_softmax
+def gradient_softmax(W, X, y, reg):
+    Z = X @ W
+    I_i = np.zeros_like(Z)
+    I_i[np.arange(len(Z)), y] = 1
+    F = softmax(Z)
+    grad = np.dot(X.T, F - I_i) / len(X) + 2 * reg * W
+    return grad
+# end::gradient_softmax
+
+
+# tag::loss_softmax
+def loss_softmax(W, X, y, reg):
+    Z = X @ W
+    Z_i_y_i = Z[np.arange(len(Z)), y]
+    negative_log_prob = -Z_i_y_i + np.log(np.sum(np.exp(Z), axis=-1))
+    loss = np.mean(negative_log_prob) + reg * np.sum(W * W)
+    return loss
+# end::loss_softmax
+
+
+# tag::gradient_softmax_onehot
+def gradient_softmax_onehot(W, X, y, reg):
+    Z = X @ W
+    F = softmax(Z)
+    grad = np.dot(X.T, F - y) / len(X) + 2 * reg * W
+    return grad
+# end::gradient_softmax_onehot
+
+
+# tag::loss_softmax_onehot
+def loss_softmax_onehot(W, X, y, reg):
+    Z = X @ W
+    F = softmax(Z)
+    loss = -np.sum(y * np.log(F)) / len(X) + reg * np.sum(W * W)
+    return loss
+# end::loss_softmax_onehot

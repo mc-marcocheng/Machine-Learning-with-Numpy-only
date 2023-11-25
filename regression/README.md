@@ -912,3 +912,118 @@ def grad_softmax_cross_entropy_one_hot(Z, y):
     F = softmax(Z)
     return (F - y) / len(Z)
 ```
+
+### Cross entropy loss gradient with respect to weight parameter $W$
+
+As $z_i=xW_{,i}$, its gradient with respect to $W_{,i}$ is $x$, and its gradient with respect to $W_{,j}$ is 0 for $i\neq j$. Hence,
+
+$$\frac{\partial z_i}{\partial W_{,j}}=1(i==j)x$$
+
+$$\frac{\partial L}{\partial W_{,j}}=\sum_{i=1}^3\frac{\partial L}{\partial z_i}\frac{\partial z_i}{\partial W_{,j}}=\frac{\partial L}{\partial z_j}\frac{\partial z_j}{\partial W_{,j}}=(f_j-1(y==j))x$$
+
+Note: As $W_{,i}$ is a column vector, if $x$ is a row vector, in order to make $\frac{\partial L}{\partial W}$ the same shape as $W$:
+
+$$\begin{aligned}\frac{\partial L}{\partial W}&=\left(\frac{\partial L}{\partial W_{,1}}^T,\frac{\partial L}{\partial W_{,2}}^T,\cdots,\frac{\partial L}{\partial W_{,C}}^T\right) \\
+&=x^T(f_1-1(y==1),f_2-1(y==2),\cdots,f_C-1(y==C))\end{aligned}$$
+
+If we use one-hot vector to represent the label $y$, it can be simplified as:
+
+$$\frac{\partial L}{\partial W}= x^T(f-y)$$
+
+For dataset with $m$ samples:
+
+$$X=\begin{bmatrix}x^{(1)} \\
+x^{(2)} \\
+\vdots \\
+x^{(i)} \\
+\vdots \\
+x^{(m)}\end{bmatrix}$$
+
+$F$ and $Y$ are constructed from their respective prediction value and labels:
+
+$$F=\begin{bmatrix}f^{(1)} \\
+f^{(2)} \\
+\vdots \\
+f^{(i)} \\
+\vdots \\
+f^{(m)}\end{bmatrix},\quad Y=\begin{bmatrix}y^{(1)} \\
+y^{(2)} \\
+\vdots \\
+y^{(i)} \\
+\vdots \\
+y^{(m)}\end{bmatrix}$$
+
+Then the cross entropy loss function's gradient with respect to $W$ is:
+
+$$\frac{\partial L}{\partial W}=X^T(F-Y)$$
+
+If we add regularization term into cross entropy loss function,
+
+$$L(W)=-\frac{1}{m}\sum_{i=1}^m\log\left(f_{y^{(i)}}^{(i)}\right)+\lambda\|W\|^2$$
+
+If one-hot vector is used to represent the label,
+
+$$L(W)=-\frac{1}{m}\sum_{i=1}^my^{(i)}\log\left(f^{(i)}\right)+\lambda\|W\|^2$$
+
+The cross entropy loss function's gradient with respect to $W$ is:
+
+$$\frac{\partial L}{\partial W}=X^T(F-Y)+2\lambda W$$
+
+```python
+def gradient_softmax(W, X, y, reg):
+    Z = X @ W
+    I_i = np.zeros_like(Z)
+    I_i[np.arange(len(Z)), y] = 1
+    F = softmax(Z)
+    grad = np.dot(X.T, F - I_i) / len(X) + 2 * reg * W
+    return grad
+```
+
+```python
+def loss_softmax(W, X, y, reg):
+    Z = X @ W
+    Z_i_y_i = Z[np.arange(len(Z)), y]
+    negative_log_prob = -Z_i_y_i + np.log(np.sum(np.exp(Z), axis=-1))
+    loss = np.mean(negative_log_prob) + reg * np.sum(W * W)
+    return loss
+```
+
+One-hot representation version:
+```python
+def gradient_softmax_onehot(W, X, y, reg):
+    Z = X @ W
+    F = softmax(Z)
+    grad = np.dot(X.T, F - y) / len(X) + 2 * reg * W
+    return grad
+```
+
+Example:
+```python
+X = np.array([[2, 3], [4, 5]])
+y = np.array([2, 1])
+W = np.array([[0.1, 0.2, 0.3], [0.4, 0.2, 0.8]])
+reg = 0.2
+print(f"{gradient_softmax(W,X,y,reg) = }")
+print(f"{loss_softmax(W,X,y,reg) = }")
+# one-hot representation
+X = np.array([[2, 3], [4, 5]])
+y = np.array([[0, 0, 1], [0, 1, 0]])
+print(f"{gradient_softmax_onehot(W,X,y,reg) = }")
+print(f"{loss_softmax_onehot(W,X,y,reg) = }")
+```
+<details open>
+<summary>Output</summary>
+
+```
+gradient_softmax(W,X,y,reg) = array([[ 0.30213245, -1.75779321,  1.69566076],
+       [ 0.5254108 , -2.19194012,  2.22652932]])
+loss_softmax(W,X,y,reg) = 2.086304963628266
+gradient_softmax_onehot(W,X,y,reg) = array([[ 0.30213245, -1.75779321,  1.69566076],
+       [ 0.5254108 , -2.19194012,  2.22652932]])
+loss_softmax_onehot(W,X,y,reg) = 2.0863049636282662
+```
+
+</details>
+
+
+## Softmax regression gradient descent

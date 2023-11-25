@@ -611,3 +611,80 @@ One-hot vector version:
 ```python
 ${{ softmax_cross_entropy_gradient_one_hot }}
 ```
+
+### Cross entropy loss gradient with respect to weight parameter $W$
+
+As $z_i=xW_{,i}$, its gradient with respect to $W_{,i}$ is $x$, and its gradient with respect to $W_{,j}$ is 0 for $i\neq j$. Hence,
+
+$$\frac{\partial z_i}{\partial W_{,j}}=1(i==j)x$$
+
+$$\frac{\partial L}{\partial W_{,j}}=\sum_{i=1}^3\frac{\partial L}{\partial z_i}\frac{\partial z_i}{\partial W_{,j}}=\frac{\partial L}{\partial z_j}\frac{\partial z_j}{\partial W_{,j}}=(f_j-1(y==j))x$$
+
+Note: As $W_{,i}$ is a column vector, if $x$ is a row vector, in order to make $\frac{\partial L}{\partial W}$ the same shape as $W$:
+
+$$\begin{aligned}\frac{\partial L}{\partial W}&=\left(\frac{\partial L}{\partial W_{,1}}^T,\frac{\partial L}{\partial W_{,2}}^T,\cdots,\frac{\partial L}{\partial W_{,C}}^T\right) \\
+&=x^T(f_1-1(y==1),f_2-1(y==2),\cdots,f_C-1(y==C))\end{aligned}$$
+
+If we use one-hot vector to represent the label $y$, it can be simplified as:
+
+$$\frac{\partial L}{\partial W}= x^T(f-y)$$
+
+For dataset with $m$ samples:
+
+$$X=\begin{bmatrix}x^{(1)} \\
+x^{(2)} \\
+\vdots \\
+x^{(i)} \\
+\vdots \\
+x^{(m)}\end{bmatrix}$$
+
+$F$ and $Y$ are constructed from their respective prediction value and labels:
+
+$$F=\begin{bmatrix}f^{(1)} \\
+f^{(2)} \\
+\vdots \\
+f^{(i)} \\
+\vdots \\
+f^{(m)}\end{bmatrix},\quad Y=\begin{bmatrix}y^{(1)} \\
+y^{(2)} \\
+\vdots \\
+y^{(i)} \\
+\vdots \\
+y^{(m)}\end{bmatrix}$$
+
+Then the cross entropy loss function's gradient with respect to $W$ is:
+
+$$\frac{\partial L}{\partial W}=X^T(F-Y)$$
+
+If we add regularization term into cross entropy loss function,
+
+$$L(W)=-\frac{1}{m}\sum_{i=1}^m\log\left(f_{y^{(i)}}^{(i)}\right)+\lambda\|W\|^2$$
+
+If one-hot vector is used to represent the label,
+
+$$L(W)=-\frac{1}{m}\sum_{i=1}^my^{(i)}\log\left(f^{(i)}\right)+\lambda\|W\|^2$$
+
+The cross entropy loss function's gradient with respect to $W$ is:
+
+$$\frac{\partial L}{\partial W}=X^T(F-Y)+2\lambda W$$
+
+```python
+${{ gradient_softmax }}
+```
+
+```python
+${{ loss_softmax }}
+```
+
+One-hot representation version:
+```python
+${{ gradient_softmax_onehot }}
+```
+
+Example:
+```python
+${{ softmax_gradient_example }}
+```
+$[[ +regression.snippets.softmax_gradient_example ]]
+
+## Softmax regression gradient descent

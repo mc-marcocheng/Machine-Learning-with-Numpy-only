@@ -1050,15 +1050,6 @@ Example: spiral dataset
 ```python
 X_spiral, y_spiral = gen_spiral_dataset()
 ```
-<details>
-<summary>Output</summary>
-
-```
-
-```
-
-</details>
-
 
 ![](../assets/spiral_plot.png)
 
@@ -1067,6 +1058,16 @@ w = np.zeros([X_spiral.shape[1] + 1, len(np.unique(y_spiral))])
 w_history = gradient_descent_softmax(
     w, X_spiral, y_spiral, reg=1e-3, alpha=1.0, iterations=200
 )
+w = w_history[-1]
 ```
+<details open>
+<summary>Output</summary>
+
+```
+Accuracy: 0.5166666666666667
+```
+
+</details>
+
 
 ![](../assets/spiral_classify.png)

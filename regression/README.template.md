@@ -698,12 +698,12 @@ Example: spiral dataset
 ```python
 ${{ spiral_gen }}
 ```
-$[[ regression.snippets.spiral_plot ]]
 
 ![](../assets/spiral_plot.png)
 
 ```python
 ${{ spiral_gradient_descent }}
 ```
+$[[ +regression.snippets.spiral_plot ]]
 
 ![](../assets/spiral_classify.png)

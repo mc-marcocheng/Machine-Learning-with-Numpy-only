@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from regression.regression import gradient_descent_softmax
+from regression.regression import getAccuracy, gradient_descent_softmax
 
 np.random.seed(100)
 
@@ -35,6 +35,7 @@ w = np.zeros([X_spiral.shape[1] + 1, len(np.unique(y_spiral))])
 w_history = gradient_descent_softmax(
     w, X_spiral, y_spiral, reg=1e-3, alpha=1.0, iterations=200
 )
+w = w_history[-1]
 # end::spiral_gradient_descent
 
 # plot the resulting classifier
@@ -52,3 +53,5 @@ plt.scatter(X_spiral[:, 0], X_spiral[:, 1], c=y_spiral, s=40, cmap=plt.cm.Spectr
 plt.xlim(xx.min(), xx.max())
 plt.ylim(yy.min(), yy.max())
 plt.savefig("assets/spiral_classify.png")
+
+print(f"Accuracy: {getAccuracy(w, X_spiral, y_spiral)}")

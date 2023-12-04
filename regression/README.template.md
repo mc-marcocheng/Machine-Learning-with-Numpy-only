@@ -704,6 +704,9 @@ ${{ spiral_gen }}
 ```python
 ${{ spiral_gradient_descent }}
 ```
+
 $[[ +regression.snippets.spiral_plot ]]
 
 ![](../assets/spiral_classify.png)
+
+As you can see, softmax gradient descent is fundamentally a linear model.

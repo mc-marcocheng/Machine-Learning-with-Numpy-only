@@ -1060,6 +1060,7 @@ w_history = gradient_descent_softmax(
 )
 w = w_history[-1]
 ```
+
 <details open>
 <summary>Output</summary>
 
@@ -1071,3 +1072,5 @@ Accuracy: 0.5166666666666667
 
 
 ![](../assets/spiral_classify.png)
+
+As you can see, softmax gradient descent is fundamentally a linear model.

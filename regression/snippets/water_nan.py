@@ -7,7 +7,7 @@ from regression.regression import linear_regression_vec
 
 warnings.filterwarnings(category=RuntimeWarning, action="ignore")
 
-dataset = sio.loadmat("regression/snippets/water.mat")
+dataset = sio.loadmat("data/water.mat")
 x_train = dataset["X"]
 x_val = dataset["Xval"]
 x_test = dataset["Xtest"]

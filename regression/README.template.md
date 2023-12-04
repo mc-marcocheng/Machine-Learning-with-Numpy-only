@@ -688,3 +688,22 @@ ${{ softmax_gradient_example }}
 $[[ +regression.snippets.softmax_gradient_example ]]
 
 ## Softmax regression gradient descent
+
+```python
+${{ softmax_gradient_descent }}
+```
+
+Example: spiral dataset
+
+```python
+${{ spiral_gen }}
+```
+$[[ regression.snippets.spiral_plot ]]
+
+![](../assets/spiral_plot.png)
+
+```python
+${{ spiral_gradient_descent }}
+```
+
+![](../assets/spiral_classify.png)

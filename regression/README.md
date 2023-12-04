@@ -1027,3 +1027,46 @@ loss_softmax_onehot(W,X,y,reg) = 2.0863049636282662
 
 
 ## Softmax regression gradient descent
+
+```python
+def gradient_descent_softmax(
+    w, X, y, reg=0.0, alpha=0.01, iterations=100, epsilon=1e-8
+):
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    w_history = []
+    for i in range(iterations):
+        gradient = gradient_softmax(w, X, y, reg)
+        if np.max(np.abs(gradient)) < epsilon:
+            print("gradient is small enough!")
+            print("iterated num is :", i)
+            break
+        w = w - (alpha * gradient)
+        w_history.append(w)
+    return w_history
+```
+
+Example: spiral dataset
+
+```python
+X_spiral, y_spiral = gen_spiral_dataset()
+```
+<details>
+<summary>Output</summary>
+
+```
+
+```
+
+</details>
+
+
+![](../assets/spiral_plot.png)
+
+```python
+w = np.zeros([X_spiral.shape[1] + 1, len(np.unique(y_spiral))])
+w_history = gradient_descent_softmax(
+    w, X_spiral, y_spiral, reg=1e-3, alpha=1.0, iterations=200
+)
+```
+
+![](../assets/spiral_classify.png)

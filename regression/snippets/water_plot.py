@@ -3,7 +3,7 @@ import scipy.io as sio
 
 from regression.regression import compute_loss_history, linear_regression_vec, plot_history_predict
 
-dataset = sio.loadmat("regression/snippets/water.mat")
+dataset = sio.loadmat("data/water.mat")
 x_train = dataset["X"]
 x_val = dataset["Xval"]
 x_test = dataset["Xtest"]

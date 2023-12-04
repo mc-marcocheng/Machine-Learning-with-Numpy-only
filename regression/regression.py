@@ -309,3 +309,29 @@ def loss_softmax_onehot(W, X, y, reg):
     loss = -np.sum(y * np.log(F)) / len(X) + reg * np.sum(W * W)
     return loss
 # end::loss_softmax_onehot
+
+
+# tag::softmax_gradient_descent
+def gradient_descent_softmax(
+    w, X, y, reg=0.0, alpha=0.01, iterations=100, epsilon=1e-8
+):
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    w_history = []
+    for i in range(iterations):
+        gradient = gradient_softmax(w, X, y, reg)
+        if np.max(np.abs(gradient)) < epsilon:
+            print("gradient is small enough!")
+            print("iterated num is :", i)
+            break
+        w = w - (alpha * gradient)
+        w_history.append(w)
+    return w_history
+# end::softmax_gradient_descent
+
+
+def getAccuracy(w, X, y):
+    X = np.hstack((np.ones((X.shape[0], 1), dtype=X.dtype), X))
+    probs = softmax(np.dot(X, w))
+    predicts = np.argmax(probs, axis=1)
+    accuracy = sum(predicts == y) / (float(len(y)))
+    return accuracy

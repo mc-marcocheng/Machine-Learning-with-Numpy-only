@@ -9,11 +9,11 @@ I will try to implement machine learning basic algorithms and architectures usin
     - RMSprop
     - Adam
     - optimizer
-- [Regression](regression/README.md) (In progress)
+- [Regression](regression/README.md)
     - Linear Regression
     - Logistic Regression
     - Softmax Regression
-- Neural Network (Coming soon)
+- [Neural Network](neural_network/README.md) (In progress)
     - backpropagation
     - simple deep learning framework
 - Neural Network Improvements (Coming soon)

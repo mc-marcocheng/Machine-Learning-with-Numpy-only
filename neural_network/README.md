@@ -28,10 +28,14 @@ $x_j$ is an input, $w_j$ is its respective weight, and $g$ is the activation fun
 $\text{sign}(x)$:
 
 ```python
-${{ sign_activation }}
+def sign(x):
+    return np.array(x > 0, dtype=int)
+
+def grad_sign(x):
+    return np.zeros_like(x)
 ```
 
-$[[ -neural_network.snippets.activation_functions ]]
+
 
 ![](../assets/sign_activation.png)
 
@@ -42,7 +46,9 @@ $$\tanh(x)=\frac{e^x-e^{-x}}{e^x+e^{-x}}$$
 $$\tanh^\prime(x)=1-\tanh^2(x)$$
 
 ```python
-${{ tanh_activation }}
+def grad_tanh(x):
+    a = np.tanh(x)
+    return 1 - a**2
 ```
 
 ![](../assets/tanh_activation.png)
@@ -56,7 +62,11 @@ $$\text{ReLU}'(x)=\left\{\begin{aligned}1 && \text{if } x>0 \\
 0 && \text{otherwise}\end{aligned}\right.$$
 
 ```python
-${{ relu_activation }}
+def relu(x):
+    return np.maximum(0, x)
+
+def grad_relu(x):
+    return 1. * (x > 0)
 ```
 
 ![](../assets/relu_activation.png)
@@ -72,7 +82,13 @@ $$\text{LeakyReLU}'(x)=\left\{\begin{aligned}1 && \text{if } x>0 \\
 a && \text{otherwise}\end{aligned}\right.$$
 
 ```python
-${{ leaky_relu_activation }}
+def leakyRelu(x, a=0.2):
+    y = np.copy(x)
+    y[y < 0] *= a
+    return y
+
+def grad_leakyRelu(x, a=0.2):
+    return np.clip(x > 0, a, 1.0)
 ```
 
 ![](../assets/leaky_relu_activation.png)
@@ -81,7 +97,7 @@ ${{ leaky_relu_activation }}
 
 A neural network is composed of many perceptrons to represent a complicated function. It has an input layer and an output layer. In between, there are one or more hidden layers.
 
-$[[ -neural_network.snippets.neural_network_plot ]]
+
 
 ![](../assets/neural_network_networkx.png)
 
@@ -148,9 +164,54 @@ A^{[l]}&=g^{[l]}(Z^{[l]})\end{aligned}$$
 Example:
 
 ```python
-${{ forward_propagation }}
+X = np.array([[1.0, 2.0], [3.0, 4.0]])
+W1 = np.array([[0.1, 0.3, 0.5, 0.2], [0.4, 0.6, 0.7, 0.1]])
+b1 = np.array([0.1, 0.2, 0.3, 0.4])
+
+print(f"{X.shape = }")
+print(f"{W1.shape = }")
+print(f"{b1.shape = }")
+
+# First layer
+Z1 = np.dot(X, W1) + b1
+A1 = sigmoid(Z1)
+print(f"{Z1 = }")
+print(f"{A1 = }")
+
+W2 = np.array([[0.1, 1.4, 0.2], [2.5, 0.6, 0.3], [1.1, 0.7, 0.8], [0.3, 1.5, 2.1]])
+b2 = np.array([0.1, 2, 0.3])
+print(f"{A1.shape = }")
+print(f"{W2.shape = }")
+print(f"{b2.shape = }")
+
+# Second layer
+Z2 = np.dot(A1, W2) + b2
+A2 = sigmoid(Z2)
+print(f"{Z2 = }")
+print(f"{A2 = }")
 ```
 
-$[[ neural_network.snippets.forward_propagation ]]
+<details>
+<summary>Output</summary>
+
+```
+X.shape = (2, 2)
+W1.shape = (2, 4)
+b1.shape = (4,)
+Z1 = array([[1. , 1.7, 2.2, 0.8],
+       [2. , 3.5, 4.6, 1.4]])
+A1 = array([[0.73105858, 0.84553473, 0.90024951, 0.68997448],
+       [0.88079708, 0.97068777, 0.9900482 , 0.80218389]])
+A1.shape = (2, 4)
+W2.shape = (4, 3)
+b2.shape = (3,)
+Z2 = array([[3.4842095 , 5.19593923, 2.86901816],
+       [3.94450732, 5.71183814, 3.24399047]])
+A2 = array([[0.97023513, 0.9944915 , 0.94629347],
+       [0.98100697, 0.99670431, 0.96245657]])
+```
+
+</details>
+
 
 #

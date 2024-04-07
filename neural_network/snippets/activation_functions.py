@@ -4,7 +4,7 @@ import numpy as np
 
 # tag::sign_activation
 def sign(x):
-    return np.array(x > 0, dtype=np.int)
+    return np.array(x > 0, dtype=int)
 
 def grad_sign(x):
     return np.zeros_like(x)
@@ -16,6 +16,7 @@ plt.plot(x, sign(x),label="sigmoid")
 plt.plot(x, grad_sign(x),label="derivative")
 plt.legend(loc="upper right", frameon=False)
 plt.savefig("assets/sign_activation.png")
+plt.clf()
 
 # tag::tanh_activation
 def grad_tanh(x):
@@ -28,6 +29,7 @@ plt.plot(x, np.tanh(x),label="tanh")
 plt.plot(x, grad_tanh(x),label="derivative")
 plt.legend(loc="upper right", frameon=False)
 plt.savefig("assets/tanh_activation.png")
+plt.clf()
 
 # tag::relu_activation
 def relu(x):
@@ -42,6 +44,7 @@ plt.plot(x, relu(x),label="relu")
 plt.plot(x, grad_relu(x),label="derivative")
 plt.legend(loc="upper right", frameon=False)
 plt.savefig("assets/relu_activation.png")
+plt.clf()
 
 # tag::leaky_relu_activation
 def leakyRelu(x, a=0.2):
@@ -58,3 +61,4 @@ plt.plot(x, leakyRelu(x),label="leakrelu")
 plt.plot(x, grad_leakyRelu(x),label="derivative")
 plt.legend(loc="upper right", frameon=False)
 plt.savefig("assets/leaky_relu_activation.png")
+plt.clf()

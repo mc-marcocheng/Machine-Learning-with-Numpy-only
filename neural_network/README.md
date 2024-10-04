@@ -219,3 +219,21 @@ A2 = array([[0.97023513, 0.9944915 , 0.94629347],
 For binary classification problems, we use the sigmoid function to convert the network's output into the interval $[0, 1]$.
 
 For multi-class classification problems, we use the softmax function to convert the output into interval $[0, 1]$ in order to represent the probability for each class.
+
+### Loss function
+
+Assume that the label for a sample is $y^{(i)}$, and the neural network's output is $f^{(i)}$. Then the loss for that sample is $L(f^{(i)}, y^{(i)})$. For $m$ samples, we usually take their average losses:
+
+$$L(f,y)=\frac{1}{m}\sum_{i=1}^mL(f^{(i)}, y^{(i)})$$
+
+Common loss functions include mean square error, binary cross-entropy and categorical cross-entropy.
+
+#### Mean Square Error (MSE)
+
+For $F=(f^{(1)}, f^{(2)}, \dots, f^{(m)})$ and $Y=(y^{(1)}, y^{(2)}, \dots, y^{(m)})^T$, the MSE loss is
+
+$$L(F,Y)=\frac{1}{m}\sum_{i=1}^m\|f^{(i)}-y^{(i)}\|_2^2$$
+
+By convention, we divide the loss by 2 to make the gradient of the loss function easier to compute / looks better.
+
+$$L(F,Y)=\frac{1}{2m}\sum_{i=1}^m\|f^{(i)}-y^{(i)}\|_2^2$$

@@ -153,4 +153,8 @@ ${{ forward_propagation }}
 
 $[[ neural_network.snippets.forward_propagation ]]
 
-#
+### Output
+
+For binary classification problems, we use the sigmoid function to convert the network's output into the interval $[0, 1]$.
+
+For multi-class classification problems, we use the softmax function to convert the output into interval $[0, 1]$ in order to represent the probability for each class.

@@ -18,7 +18,7 @@ for i in 1, 2, 3:
         G.add_edge(i, j, color="C1")
 for i in 4, 5, 6, 7:
     for j in 8, 9, 10:
-        G.add_edge(i, 7, color="C2")
+        G.add_edge(i, j, color="C2")
 
 nx.draw(
     G,
